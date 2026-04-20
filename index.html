@@ -1,0 +1,4185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CM BRD Builder — Saras Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════════════
+   TYPOGRAPHY SYSTEM
+   --font-serif : Playfair Display — headings, card titles, brand
+   --font-sans  : Inter          — body, labels, inputs, UI text
+═══════════════════════════════════════════════════ */
+:root {
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Type scale */
+  --t-xs:   11px;
+  --t-sm:   12px;
+  --t-base: 13.5px;
+  --t-md:   15px;
+  --t-lg:   17px;
+  --t-xl:   20px;
+  --t-2xl:  24px;
+
+  /* Line heights */
+  --lh-tight:  1.25;
+  --lh-snug:   1.4;
+  --lh-normal: 1.55;
+  --lh-relaxed:1.7;
+
+  /* Letter spacing */
+  --ls-tight: -0.3px;
+  --ls-normal: 0;
+  --ls-wide:   0.4px;
+  --ls-wider:  0.7px;
+  --ls-widest: 1.1px;
+}
+
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — LIGHT & DARK
+═══════════════════════════════════════════════════ */
+:root {
+  /* Brand palette */
+  --green:          #1A7F5A;
+  --green-dark:     #126045;
+  --green-deeper:   #0D4A35;
+  --green-hover:    #F0FAF5;
+  --green-mid:      rgba(26,127,90,0.14);
+  --green-border:   rgba(26,127,90,0.24);
+
+  /* Logo blue — solid, high-contrast */
+  --logo-blue:      #1B3FAB;
+  --logo-blue-dark: #142E82;
+
+  --blue:           #2056C8;
+  --blue-bg:        #EEF3FF;
+  --blue-border:    rgba(32,86,200,0.22);
+
+  --red:            #B91C1C;
+  --red-bg:         #FEF2F2;
+  --amber:          #B45309;
+  --amber-bg:       #FFFBEB;
+  --orange:         #B84A00;
+  --orange-bg:      #FFF4EE;
+  --orange-border:  rgba(184,74,0,0.22);
+  --purple:         #6020A0;
+  --purple-bg:      rgba(96,32,160,0.07);
+  --purple-border:  rgba(96,32,160,0.18);
+}
+
+[data-theme="light"] {
+  --bg:             #F2F4F8;
+  --surface:        #FFFFFF;
+  --surface-2:      #F8FAFC;
+  --surface-3:      #EFF2F7;
+  --border:         #DDE3EE;
+  --border-2:       #C4CEDF;
+  --text-primary:   #0C1629;
+  --text-secondary: #3D526B;
+  --text-muted:     #7E94AE;
+  --text-dim:       #B8C7D9;
+  --shadow-xs:      0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm:      0 1px 4px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:      0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+  --shadow-lg:      0 20px 48px rgba(0,0,0,0.13), 0 8px 16px rgba(0,0,0,0.07);
+  --input-bg:       #FAFBFD;
+  --input-border:   #DDE3EE;
+  --overlay:        rgba(12,22,41,0.48);
+  --hdr-bg:         #FFFFFF;
+  --nav-bg:         #FFFFFF;
+}
+
+[data-theme="dark"] {
+  --bg:             #0B0F18;
+  --surface:        #141924;
+  --surface-2:      #1A2133;
+  --surface-3:      #202840;
+  --border:         #252E45;
+  --border-2:       #303D58;
+  --text-primary:   #E4EAF6;
+  --text-secondary: #8A9BB8;
+  --text-muted:     #4A5E7A;
+  --text-dim:       #252E45;
+  --shadow-xs:      0 1px 2px rgba(0,0,0,0.4);
+  --shadow-sm:      0 1px 4px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-md:      0 4px 16px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.25);
+  --shadow-lg:      0 20px 48px rgba(0,0,0,0.65), 0 8px 16px rgba(0,0,0,0.35);
+  --input-bg:       #1A2133;
+  --input-border:   #252E45;
+  --overlay:        rgba(0,0,0,0.68);
+  --hdr-bg:         #0F1520;
+  --nav-bg:         #0F1520;
+}
+
+/* ═══════════════════════════════════════════════════
+   BASE RESET & GLOBAL
+═══════════════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: var(--t-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* Serif utility */
+.serif { font-family: var(--font-serif); }
+
+/* ═══════════════════════════════════════════════════
+   LAYOUT CONSTANTS
+═══════════════════════════════════════════════════ */
+:root {
+  --hdr-h: 64px;
+  --nav-h: 50px;
+  --sub-h: 76px;
+  --content-offset: calc(var(--hdr-h) + var(--nav-h) + var(--sub-h));
+  --content-max: 1140px;
+  --content-pad: 36px;
+  --radius-xs:  6px;
+  --radius-sm:  9px;
+  --radius-md:  13px;
+  --radius-lg:  18px;
+  --radius-full:999px;
+}
+
+/* ═══════════════════════════════════════════════════
+   HEADER  — premium bar with blue logo
+═══════════════════════════════════════════════════ */
+.hdr {
+  position:fixed; top:0; left:0; right:0; height:var(--hdr-h);
+  background: var(--hdr-bg);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 var(--content-pad);
+  z-index:400;
+  box-shadow: var(--shadow-sm);
+}
+
+.hdr-brand { display:flex; align-items:center; gap:14px; }
+
+/* S Logo — solid blue, high-contrast */
+.hdr-logo {
+  width:40px; height:40px; border-radius:10px;
+  background: var(--logo-blue);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  box-shadow: 0 2px 8px rgba(27,63,171,0.35);
+}
+.hdr-logo-letter {
+  font-family: var(--font-serif);
+  font-size:20px; font-weight:700;
+  color:#fff;
+  line-height:1;
+  letter-spacing:-0.5px;
+  margin-top:1px; /* optical centering */
+}
+
+/* Brand name — serif for "saras", sans for rest */
+.hdr-wordmark {
+  display:flex; align-items:baseline; gap:6px;
+}
+.hdr-wordmark-saras {
+  font-family: var(--font-serif);
+  font-size:var(--t-lg); font-weight:600;
+  color: var(--green);
+  letter-spacing: var(--ls-tight);
+}
+.hdr-wordmark-product {
+  font-family: var(--font-sans);
+  font-size:var(--t-md); font-weight:500;
+  color: var(--text-secondary);
+  letter-spacing: var(--ls-normal);
+}
+
+/* Version badge */
+.hdr-badge {
+  background: var(--green-hover);
+  border:1px solid var(--green-border);
+  color: var(--green);
+  font-family: var(--font-sans);
+  font-size: var(--t-xs); font-weight:700;
+  letter-spacing: var(--ls-wider); text-transform:uppercase;
+  padding:4px 12px; border-radius: var(--radius-full);
+}
+
+.hdr-right { display:flex; align-items:center; gap:10px; }
+
+/* Progress pill */
+.prog-pill {
+  display:flex; align-items:center; gap:10px;
+  padding:7px 16px;
+  background: var(--surface-2);
+  border:1px solid var(--border);
+  border-radius: var(--radius-full);
+}
+.prog-lbl {
+  font-family: var(--font-sans);
+  font-size: var(--t-xs); font-weight:500; color:var(--text-secondary);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+.prog-track { width:72px; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.prog-fill { height:100%; background:var(--green); border-radius:2px; width:0%; transition:width 0.5s cubic-bezier(.4,0,.2,1); }
+.prog-pct {
+  font-family: var(--font-sans);
+  font-size: var(--t-xs); font-weight:700; color:var(--green); min-width:28px;
+  letter-spacing: var(--ls-wide);
+}
+
+/* Theme toggle */
+.btn-theme {
+  width:36px; height:36px; border-radius: var(--radius-sm);
+  border:1px solid var(--border); background:var(--surface-2);
+  color:var(--text-secondary); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; transition:all 0.15s;
+}
+.btn-theme:hover { border-color:var(--border-2); background:var(--surface-3); color:var(--text-primary); }
+
+/* Reset */
+.btn-reset {
+  display:flex; align-items:center; gap:6px;
+  padding:8px 16px;
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text-secondary);
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:500;
+  cursor:pointer; transition:all 0.15s;
+}
+.btn-reset:hover { border-color:var(--border-2); color:var(--text-primary); background:var(--surface-3); }
+.btn-reset svg { width:13px; height:13px; }
+
+/* Export — premium green CTA */
+.btn-export {
+  display:flex; align-items:center; gap:8px;
+  padding:9px 20px;
+  background:var(--green); border:none;
+  border-radius:var(--radius-sm); color:#fff;
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600;
+  letter-spacing:var(--ls-normal);
+  cursor:pointer; transition:all 0.18s;
+  box-shadow: 0 2px 10px rgba(26,127,90,0.32);
+  white-space:nowrap;
+}
+.btn-export:hover { background:var(--green-dark); transform:translateY(-1px); box-shadow:0 4px 16px rgba(26,127,90,0.42); }
+.btn-export:active { transform:none; box-shadow:0 1px 4px rgba(26,127,90,0.25); }
+.btn-export:disabled { opacity:0.55; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-export svg { width:15px; height:15px; flex-shrink:0; }
+.btn-export.locked {
+  background:var(--surface-3); border:1px solid var(--border);
+  color:var(--text-muted); box-shadow:none; cursor:not-allowed;
+}
+.btn-export.locked:hover { transform:none; box-shadow:none; background:var(--surface-3); }
+
+/* ═══════════════════════════════════════════════════
+   PRIMARY NAV
+═══════════════════════════════════════════════════ */
+.nav-primary {
+  position:fixed; top:var(--hdr-h); left:0; right:0; height:var(--nav-h);
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center;
+  padding:0 var(--content-pad); gap:2px;
+  z-index:300;
+}
+
+.nav-tab {
+  display:flex; align-items:center; gap:7px;
+  padding:8px 15px; border-radius:var(--radius-sm);
+  font-family:var(--font-sans);
+  font-size:var(--t-sm); font-weight:500;
+  color:var(--text-secondary);
+  border:none; background:none;
+  cursor:pointer; transition:all 0.14s; white-space:nowrap;
+  position:relative;
+}
+.nav-tab::after {
+  content:''; position:absolute; bottom:-14px; left:10px; right:10px;
+  height:2px; border-radius:1px; background:transparent; transition:background 0.15s;
+}
+.nav-tab:hover { color:var(--text-primary); background:var(--surface-3); }
+.nav-tab.active { color:var(--green); font-weight:600; }
+.nav-tab.active::after { background:var(--green); }
+
+.nav-badge {
+  background:var(--red); color:#fff;
+  font-family:var(--font-sans);
+  font-size:10px; font-weight:700;
+  min-width:17px; height:17px; border-radius:var(--radius-full);
+  display:flex; align-items:center; justify-content:center; padding:0 4px;
+}
+
+/* ═══════════════════════════════════════════════════
+   SECONDARY NAV — pill track
+═══════════════════════════════════════════════════ */
+.nav-secondary {
+  position:fixed;
+  top:calc(var(--hdr-h) + var(--nav-h));
+  left:0; right:0; height:var(--sub-h);
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  padding:0 var(--content-pad);
+  z-index:290;
+}
+
+.step-pills-container {
+  display:inline-flex; align-items:center;
+  background:var(--surface-3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-full);
+  padding:5px; gap:3px;
+}
+
+.step-pill {
+  display:flex; align-items:center; gap:9px;
+  padding:10px 22px; border-radius:var(--radius-full);
+  font-family:var(--font-sans);
+  font-size:var(--t-sm); font-weight:500;
+  color:var(--text-secondary);
+  cursor:pointer; transition:all 0.22s cubic-bezier(.4,0,.2,1);
+  white-space:nowrap; user-select:none;
+}
+.step-pill:hover { color:var(--text-primary); background:rgba(0,0,0,0.04); }
+[data-theme="dark"] .step-pill:hover { background:rgba(255,255,255,0.04); }
+
+.step-pill.active {
+  background:var(--green); color:#fff; font-weight:600;
+  box-shadow:0 3px 10px rgba(26,127,90,0.38);
+}
+.step-pill.done { color:var(--green); background:var(--green-hover); font-weight:500; }
+
+.pill-num {
+  width:22px; height:22px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-sans);
+  font-size:11px; font-weight:700; flex-shrink:0; transition:all 0.2s;
+}
+.step-pill.active .pill-num { background:rgba(255,255,255,0.22); color:#fff; }
+.step-pill.done .pill-num { background:var(--green); color:#fff; }
+.step-pill:not(.active):not(.done) .pill-num { background:var(--border); color:var(--text-muted); }
+
+.pill-divider { width:24px; height:1px; background:var(--border); flex-shrink:0; }
+
+/* ═══════════════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════════════ */
+main {
+  padding-top:calc(var(--content-offset) + 32px);
+  padding-bottom:88px;
+  padding-left:var(--content-pad); padding-right:var(--content-pad);
+  max-width:var(--content-max); margin:0 auto;
+}
+
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+.step-panel { display:none; }
+.step-panel.active { display:block; animation:fadeUp 0.24s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══════════════════════════════════════════════════
+   CARDS — premium with serif headings
+═══════════════════════════════════════════════════ */
+.card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  margin-bottom:16px;
+  box-shadow:var(--shadow-sm);
+  overflow:hidden;
+  transition:box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.card:hover { box-shadow:var(--shadow-md); border-color:var(--border-2); }
+
+.card-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 24px; cursor:pointer; user-select:none; gap:14px;
+}
+.card-hdr-l { display:flex; align-items:center; gap:14px; }
+
+/* Icon — colored accent strip */
+.card-ico {
+  width:38px; height:38px; border-radius:10px;
+  background:var(--surface-3);
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; flex-shrink:0;
+}
+
+/* Card title uses SERIF for premium feel */
+.card-ttl {
+  font-family: var(--font-serif);
+  font-size: var(--t-md); font-weight:600;
+  color:var(--text-primary);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+}
+
+.card-chev {
+  width:28px; height:28px; border-radius:var(--radius-xs);
+  background:var(--surface-3);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text-muted); flex-shrink:0; transition:all 0.2s;
+}
+.card-chev svg { width:14px; height:14px; transition:transform 0.22s; }
+.card.collapsed .card-chev svg { transform:rotate(-90deg); }
+.card-hdr:hover .card-chev { background:var(--border); color:var(--text-secondary); }
+
+.card-body {
+  padding:0 24px 24px;
+  border-top:1px solid var(--border);
+}
+.card.collapsed .card-body { display:none; }
+
+/* ═══════════════════════════════════════════════════
+   FORM ELEMENTS — precise typography
+═══════════════════════════════════════════════════ */
+.form-grid   { display:grid; grid-template-columns:1fr 1fr;     gap:18px; margin-top:18px; }
+.form-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-top:18px; }
+.form-full   { grid-column:1 / -1; }
+
+.field { display:flex; flex-direction:column; gap:7px; }
+
+/* Field labels — sans, small caps feel, clear hierarchy */
+.field label {
+  font-family: var(--font-sans);
+  font-size: var(--t-xs); font-weight:600;
+  color:var(--text-secondary);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  line-height: var(--lh-tight);
+}
+.req { color:var(--red); margin-left:2px; font-weight:700; }
+
+/* Input controls */
+.ctrl {
+  width:100%; padding:11px 15px;
+  font-family:var(--font-sans); font-size:var(--t-base);
+  color:var(--text-primary); line-height:var(--lh-snug);
+  background:var(--input-bg);
+  border:1px solid var(--input-border);
+  border-radius:var(--radius-sm); outline:none;
+  transition:border-color 0.16s, box-shadow 0.16s, background 0.16s;
+  appearance:none; -webkit-appearance:none;
+}
+.ctrl-sel {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237E94AE' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 13px center; background-size:15px;
+  padding-right:38px; cursor:pointer;
+}
+.ctrl:focus {
+  border-color:var(--green); background:var(--surface);
+  box-shadow:0 0 0 3px rgba(26,127,90,0.11);
+}
+.ctrl::placeholder { color:var(--text-dim); font-style:italic; }
+textarea.ctrl { resize:vertical; min-height:90px; line-height:var(--lh-relaxed); }
+.field-hint {
+  font-family:var(--font-sans); font-size:11px;
+  color:var(--text-muted); line-height:var(--lh-snug); margin-top:1px;
+  font-style:italic;
+}
+
+.ctrl-row { display:flex; gap:9px; align-items:flex-start; }
+.ctrl-row .ctrl { flex:1; }
+.ctrl-row .ctrl-narrow { width:130px; flex-shrink:0; }
+
+/* ═══════════════════════════════════════════════════
+   CHIPS
+═══════════════════════════════════════════════════ */
+.chips-hdr {
+  font-family:var(--font-sans);
+  font-size:var(--t-xs); font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wider);
+  margin:16px 0 8px;
+}
+.chips-hdr.g { color:var(--green); }
+.chips-hdr.o { color:var(--orange); }
+.chips-hdr.b { color:var(--blue); }
+.chips-hdr.s { color:var(--text-secondary); }
+
+.chip-row { display:flex; flex-wrap:wrap; gap:7px; }
+
+.chip {
+  padding:7px 15px; border-radius:var(--radius-full);
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:500;
+  border:1.5px solid var(--border); color:var(--text-secondary);
+  background:var(--surface); cursor:pointer;
+  transition:border-color 0.14s, color 0.14s, background 0.14s, box-shadow 0.14s;
+  user-select:none; line-height:1;
+}
+.chip:hover { border-color:var(--border-2); color:var(--text-primary); box-shadow:var(--shadow-xs); }
+.chip.on   { border-color:var(--green);  color:var(--green);  background:var(--green-hover); font-weight:600; box-shadow:0 0 0 1px var(--green-border); }
+.chip.on-o { border-color:var(--orange); color:var(--orange); background:var(--orange-bg);   font-weight:600; box-shadow:0 0 0 1px var(--orange-border); }
+.chip.adv  { border-style:dashed; }
+.chip.adv.on-o { border-style:solid; }
+
+/* ═══════════════════════════════════════════════════
+   SECTION DIVIDER
+═══════════════════════════════════════════════════ */
+.sec-div {
+  font-family:var(--font-sans);
+  font-size:var(--t-xs); font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-widest);
+  color:var(--text-muted); margin:24px 0 14px;
+  display:flex; align-items:center; gap:12px;
+}
+.sec-div::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ═══════════════════════════════════════════════════
+   PKG TOGGLE
+═══════════════════════════════════════════════════ */
+.pkg-toggle {
+  display:inline-flex; border:1px solid var(--border);
+  border-radius:var(--radius-sm); overflow:hidden; margin-top:12px;
+}
+.pkg-opt {
+  padding:9px 22px;
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600;
+  border:none; background:none; color:var(--text-muted);
+  cursor:pointer; transition:all 0.14s;
+}
+.pkg-opt:not(:last-child) { border-right:1px solid var(--border); }
+.pkg-opt.on-e { background:var(--green-hover); color:var(--green); }
+.pkg-opt.on-a { background:var(--orange-bg);   color:var(--orange); }
+.pkg-opt.on-b { background:var(--blue-bg);     color:var(--blue); }
+
+/* ═══════════════════════════════════════════════════
+   CM FORMULA BLOCK — serif labels
+═══════════════════════════════════════════════════ */
+.cm-block {
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:20px 22px; margin-top:14px;
+  display:flex; flex-direction:column; gap:14px;
+}
+.cm-row { display:flex; align-items:flex-start; gap:14px; }
+.cm-tag {
+  font-family:var(--font-sans);
+  font-size:var(--t-xs); font-weight:700; letter-spacing:var(--ls-wide);
+  padding:4px 11px; border-radius:var(--radius-xs); flex-shrink:0; margin-top:2px;
+  min-width:42px; text-align:center;
+}
+.cm-tag.t1 { background:var(--blue-bg);    color:var(--blue); }
+.cm-tag.t2 { background:var(--green-hover); color:var(--green); }
+.cm-tag.t3 { background:var(--orange-bg);  color:var(--orange); }
+
+.cm-text {
+  font-family:var(--font-sans);
+  font-size:var(--t-base); color:var(--text-primary); font-weight:500;
+  line-height:var(--lh-snug); flex:1;
+}
+.cm-text span { color:var(--text-muted); font-weight:400; font-size:var(--t-sm); }
+
+/* CM Custom input */
+.cm-custom-row { display:flex; gap:8px; align-items:center; margin-bottom:7px; }
+.cm-custom-row .ctrl { font-family:var(--font-sans); }
+.cm-edit-lbl {
+  font-family:var(--font-sans);
+  font-size:var(--t-xs); font-weight:700; text-transform:uppercase;
+  letter-spacing:var(--ls-wide); color:var(--text-muted); width:42px; text-align:center; flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════════════
+   METRICS TABLE
+═══════════════════════════════════════════════════ */
+.m-block { margin-top:20px; }
+.m-head {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 15px; border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+  font-family:var(--font-sans);
+  font-size:var(--t-xs); font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wide);
+  border:1px solid; border-bottom:none;
+}
+.mh-blue   { background:var(--blue-bg);    color:var(--blue);   border-color:var(--blue-border); }
+.mh-green  { background:var(--green-hover); color:var(--green);  border-color:var(--green-border); }
+.mh-purple { background:var(--purple-bg);  color:var(--purple); border-color:var(--purple-border);}
+.mh-orange { background:var(--orange-bg);  color:var(--orange); border-color:var(--orange-border);}
+
+.m-rows { border:1px solid var(--border); border-radius:0 0 var(--radius-sm) var(--radius-sm); overflow:hidden; }
+.m-row { display:grid; grid-template-columns:200px 1fr 140px 72px; }
+.m-row.has-plat { grid-template-columns:180px 1fr 130px 130px 72px; }
+
+.m-row:not(:last-child) { border-bottom:1px solid var(--border); }
+.m-row > * { padding:10px 13px; font-size:var(--t-sm); }
+.m-row > *:not(:last-child) { border-right:1px solid var(--border); }
+
+.m-name { font-weight:600; color:var(--text-primary); background:var(--surface-2); font-family:var(--font-sans); }
+.m-notes, .m-val, .m-plat { color:var(--text-secondary); }
+.m-scope { display:flex; align-items:center; justify-content:center; }
+
+.cell-input {
+  background:none; border:none; outline:none;
+  font-family:var(--font-sans); font-size:var(--t-sm);
+  color:var(--text-primary); width:100%;
+}
+.cell-input::placeholder { color:var(--text-dim); font-style:italic; }
+.cell-sel {
+  background:none; border:none; outline:none;
+  font-family:var(--font-sans); font-size:12.5px; color:var(--text-secondary);
+  width:100%; cursor:pointer; appearance:none;
+}
+
+.m-hdr { background:var(--surface-2); }
+.m-hdr > * { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:var(--ls-wide); color:var(--text-muted); }
+.m-result { background:rgba(26,127,90,0.04); }
+.m-result .m-name { color:var(--green); }
+
+/* Scope tags */
+.stag {
+  display:inline-flex; align-items:center;
+  padding:3px 9px; border-radius:var(--radius-xs);
+  font-family:var(--font-sans); font-size:10px; font-weight:700; letter-spacing:var(--ls-wide);
+}
+.se { background:var(--green-hover);  color:var(--green);  border:1px solid var(--green-border); }
+.sa { background:var(--orange-bg);    color:var(--orange); border:1px solid var(--orange-border); }
+
+/* ═══════════════════════════════════════════════════
+   DATA TABLE
+═══════════════════════════════════════════════════ */
+.dt { width:100%; border-collapse:collapse; font-size:var(--t-sm); margin-top:16px; }
+.dt th {
+  text-align:left; padding:10px 13px;
+  font-family:var(--font-sans); font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wide);
+  color:var(--text-muted); background:var(--surface-2); border-bottom:2px solid var(--border);
+}
+.dt td { padding:11px 13px; border-bottom:1px solid var(--border); vertical-align:middle; color:var(--text-secondary); }
+.dt tr:last-child td { border-bottom:none; }
+.dt tr:hover td { background:var(--surface-2); }
+.dt .ci { background:none; border:none; outline:none; font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-primary); width:100%; }
+.dt .ci::placeholder { color:var(--text-dim); font-style:italic; }
+.dt .ds-sel { background:var(--surface-3); border:1px solid var(--border); border-radius:var(--radius-xs); color:var(--text-secondary); padding:4px 9px; font-size:12px; outline:none; font-family:var(--font-sans); appearance:none; cursor:pointer; }
+
+/* ═══════════════════════════════════════════════════
+   CALLOUT
+═══════════════════════════════════════════════════ */
+.callout {
+  display:flex; gap:11px; align-items:flex-start;
+  background:var(--blue-bg); border:1px solid var(--blue-border);
+  border-radius:var(--radius-sm); padding:13px 16px; margin-top:16px;
+  font-family:var(--font-sans); font-size:var(--t-sm);
+  color:var(--text-secondary); line-height:var(--lh-relaxed);
+}
+.callout-ico { font-size:15px; flex-shrink:0; margin-top:2px; }
+.callout strong { color:var(--text-primary); font-weight:600; }
+.callout-warn { background:var(--amber-bg); border-color:rgba(180,83,9,0.22); }
+
+/* ═══════════════════════════════════════════════════
+   DYNAMIC ROWS
+═══════════════════════════════════════════════════ */
+.dyn-row { display:flex; gap:9px; align-items:center; margin-bottom:9px; }
+.dyn-input { flex:1; }
+
+.btn-del {
+  width:34px; height:36px; border-radius:var(--radius-xs);
+  border:1px solid var(--border); background:var(--surface);
+  color:var(--text-muted); cursor:pointer; font-size:18px; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.14s; flex-shrink:0;
+}
+.btn-del:hover { border-color:var(--red); color:var(--red); background:var(--red-bg); }
+
+.btn-add {
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  width:100%; margin-top:9px; padding:10px 16px;
+  background:none; border:1.5px dashed var(--border-2);
+  border-radius:var(--radius-sm); color:var(--text-muted);
+  font-family:var(--font-sans); font-size:var(--t-sm);
+  cursor:pointer; transition:all 0.14s;
+}
+.btn-add:hover { border-color:var(--green); color:var(--green); background:var(--green-hover); }
+
+/* ═══════════════════════════════════════════════════
+   VALIDATION / ASSUMPTIONS / RISKS
+═══════════════════════════════════════════════════ */
+.v-item {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:13px 16px; border-radius:var(--radius-sm); margin-bottom:9px; border:1px solid;
+}
+.v-ok   { background:rgba(26,127,90,0.05);  border-color:rgba(26,127,90,0.2); }
+.v-warn { background:rgba(180,83,9,0.05);   border-color:rgba(180,83,9,0.22); }
+.v-err  { background:rgba(185,28,28,0.05);  border-color:rgba(185,28,28,0.2); }
+.v-ico  { font-size:15px; flex-shrink:0; margin-top:2px; }
+.v-msg strong {
+  display:block; font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600;
+  margin-bottom:3px; color:var(--text-primary);
+}
+.v-sub  { font-family:var(--font-sans); font-size:var(--t-xs); color:var(--text-muted); line-height:var(--lh-snug); }
+
+.assump-row {
+  display:grid; grid-template-columns:150px 1fr auto;
+  gap:12px; align-items:start; padding:12px 0; border-bottom:1px solid var(--border);
+}
+.assump-row:last-child { border-bottom:none; }
+.assump-area {
+  background:none; border:none; outline:none;
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600;
+  color:var(--text-primary); width:100%; padding:8px 0;
+}
+.assump-text {
+  background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-xs);
+  font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-primary);
+  padding:9px 12px; width:100%; outline:none;
+  resize:vertical; min-height:58px; line-height:var(--lh-relaxed);
+  transition:border-color 0.14s;
+}
+.assump-text:focus { border-color:var(--green); background:var(--surface); }
+
+/* ═══════════════════════════════════════════════════
+   SCOPE LOCK PAGE
+═══════════════════════════════════════════════════ */
+.scope-lock-banner {
+  border:2px solid var(--border); border-radius:var(--radius-md);
+  overflow:hidden; margin-bottom:22px;
+}
+.scope-lock-top {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:22px 26px; background:var(--surface-2);
+}
+.scope-lock-info h3 {
+  font-family:var(--font-serif);
+  font-size:var(--t-lg); font-weight:600;
+  color:var(--text-primary); margin-bottom:5px; letter-spacing:var(--ls-tight);
+}
+.scope-lock-info p  {
+  font-family:var(--font-sans); font-size:var(--t-sm);
+  color:var(--text-muted); max-width:480px; line-height:var(--lh-relaxed);
+}
+
+.scope-lock-toggle {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 22px;
+  border:2px solid var(--green); border-radius:var(--radius-sm);
+  background:var(--green-hover); cursor:pointer;
+  transition:all 0.2s; flex-shrink:0;
+}
+.scope-lock-toggle.locked { background:var(--green); border-color:var(--green-dark); }
+.scope-lock-toggle-txt {
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:700; color:var(--green);
+}
+.scope-lock-toggle.locked .scope-lock-toggle-txt { color:#fff; }
+.scope-lock-toggle-ico { font-size:18px; }
+
+.scope-lock-status {
+  padding:13px 26px; background:var(--surface); border-top:1px solid var(--border);
+  font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-muted);
+  display:flex; align-items:center; gap:9px;
+}
+.scope-dot { width:8px; height:8px; border-radius:50%; background:var(--border-2); transition:all 0.3s; }
+.scope-dot.live { background:var(--green); box-shadow:0 0 0 3px rgba(26,127,90,0.2); }
+
+/* BRD Preview — uses serif in header */
+.brd-preview { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; margin-bottom:18px; }
+.brd-head { background:var(--green); padding:22px 26px; }
+.brd-head-title {
+  font-family:var(--font-serif);
+  font-size:var(--t-xl); font-weight:600; color:#fff; letter-spacing:var(--ls-tight);
+}
+.brd-head-sub { font-family:var(--font-sans); font-size:var(--t-sm); color:rgba(255,255,255,0.82); margin-top:4px; }
+.brd-sec { padding:18px 26px; border-bottom:1px solid var(--border); }
+.brd-sec:last-child { border-bottom:none; }
+.brd-sec h4 {
+  font-family:var(--font-sans); font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-widest); color:var(--text-muted); margin-bottom:12px;
+}
+.brd-kv { display:grid; grid-template-columns:160px 1fr; gap:4px; margin-bottom:5px; }
+.brd-k { font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-muted); }
+.brd-v { font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-primary); font-weight:500; }
+
+.export-section {
+  display:flex; align-items:center; gap:16px;
+  padding:18px 22px; background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius-md); margin-top:18px;
+}
+.export-locked-msg {
+  font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-muted);
+}
+.export-locked-msg strong { color:var(--text-primary); }
+
+/* Success criteria */
+.success-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+.success-card {
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:16px 18px;
+}
+.success-card-lbl {
+  font-family:var(--font-sans); font-size:var(--t-xs); font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wider); color:var(--text-muted); margin-bottom:10px;
+}
+
+/* ═══════════════════════════════════════════════════
+   NAV BUTTONS
+═══════════════════════════════════════════════════ */
+.step-nav {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:40px; padding-top:24px; border-top:1px solid var(--border);
+}
+
+.btn-back {
+  display:flex; align-items:center; gap:7px;
+  padding:10px 22px; background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  color:var(--text-secondary);
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:500;
+  cursor:pointer; transition:all 0.14s;
+}
+.btn-back:hover { border-color:var(--border-2); color:var(--text-primary); background:var(--surface-2); }
+
+.btn-fwd {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 26px; background:var(--green);
+  border:none; border-radius:var(--radius-sm); color:#fff;
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600;
+  cursor:pointer; transition:all 0.18s;
+  box-shadow:0 2px 8px rgba(26,127,90,0.3);
+}
+.btn-fwd:hover { background:var(--green-dark); box-shadow:0 4px 14px rgba(26,127,90,0.38); transform:translateY(-1px); }
+.btn-fwd:active { transform:none; box-shadow:0 1px 4px rgba(26,127,90,0.2); }
+
+/* ═══════════════════════════════════════════════════
+   MODAL — serif headings
+═══════════════════════════════════════════════════ */
+.modal-wrap {
+  display:none; position:fixed; inset:0;
+  background:var(--overlay); backdrop-filter:blur(6px);
+  z-index:600; align-items:center; justify-content:center;
+}
+.modal-wrap.open { display:flex; }
+
+.modal {
+  background:var(--surface); border-radius:var(--radius-lg);
+  padding:30px; width:460px; max-width:94vw;
+  box-shadow:var(--shadow-lg); animation:modalIn 0.22s ease;
+}
+@keyframes modalIn { from{opacity:0;transform:scale(0.95) translateY(10px)} to{opacity:1;transform:none} }
+
+.modal-ico {
+  width:52px; height:52px; border-radius:14px;
+  background:var(--green-hover); border:1px solid var(--green-border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; margin-bottom:18px;
+}
+.modal h3 {
+  font-family:var(--font-serif);
+  font-size:var(--t-xl); font-weight:600;
+  color:var(--text-primary); margin-bottom:8px; letter-spacing:var(--ls-tight);
+}
+.modal p  {
+  font-family:var(--font-sans); font-size:var(--t-sm);
+  color:var(--text-muted); margin-bottom:22px; line-height:var(--lh-relaxed);
+}
+
+.modal-meta { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:22px; }
+.m-meta-item {
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:11px 14px;
+}
+.m-meta-lbl {
+  font-family:var(--font-sans); font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wider); color:var(--text-muted); margin-bottom:3px;
+}
+.m-meta-val { font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600; color:var(--text-primary); }
+
+.modal-btns { display:flex; gap:10px; }
+.btn-cancel {
+  flex:1; padding:12px; background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  color:var(--text-secondary);
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600;
+  cursor:pointer; transition:all 0.14s;
+}
+.btn-cancel:hover { background:var(--surface-2); border-color:var(--border-2); color:var(--text-primary); }
+
+.btn-confirm {
+  flex:2; padding:12px; background:var(--green); border:none; border-radius:var(--radius-sm);
+  color:#fff;
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600;
+  cursor:pointer; transition:all 0.16s;
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  box-shadow:0 2px 8px rgba(26,127,90,0.3);
+}
+.btn-confirm:hover { background:var(--green-dark); box-shadow:0 4px 14px rgba(26,127,90,0.38); }
+.btn-confirm.danger { background:var(--red); box-shadow:0 2px 8px rgba(185,28,28,0.28); }
+.btn-confirm.danger:hover { background:#991b1b; }
+
+/* ═══════════════════════════════════════════════════
+   MISC
+═══════════════════════════════════════════════════ */
+.spinner { display:inline-block; width:15px; height:15px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.65s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--border-2); }
+
+/* Placeholder tabs — serif heading */
+.placeholder-tab {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:72px 32px; text-align:center; box-shadow:var(--shadow-sm);
+}
+.placeholder-tab .pt-ico { font-size:44px; margin-bottom:20px; }
+.placeholder-tab h3 {
+  font-family:var(--font-serif);
+  font-size:var(--t-xl); font-weight:600; color:var(--text-primary);
+  margin-bottom:10px; letter-spacing:var(--ls-tight);
+}
+.placeholder-tab p {
+  font-family:var(--font-sans); font-size:var(--t-md);
+  color:var(--text-muted); max-width:360px; margin:0 auto; line-height:var(--lh-relaxed);
+}
+
+/* Stakeholders table */
+.sh-row { display:grid; grid-template-columns:180px 1fr 1fr auto; gap:9px; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); }
+.sh-row:last-child { border-bottom:none; }
+.sh-hdr {
+  font-family:var(--font-sans); font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wide); color:var(--text-muted);
+  padding:6px 0 9px; border-bottom:2px solid var(--border);
+}
+.sh-input {
+  background:none; border:none; outline:none;
+  font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-primary); width:100%; padding:4px 0;
+}
+.sh-input::placeholder { color:var(--text-dim); font-style:italic; }
+
+/* Risk rows */
+.risk-row { display:flex; gap:9px; margin-bottom:9px; }
+.risk-row .ctrl { flex:1; }
+.risk-level { flex-shrink:0; width:100px; }
+
+/* DS notes */
+.ds-notes-row { display:flex; flex-direction:column; gap:4px; }
+.ds-note-input {
+  width:100%; background:none; border:none; outline:none;
+  font-family:var(--font-sans); font-size:12px; color:var(--text-secondary);
+  border-bottom:1px dashed var(--border); padding:4px 0;
+  transition:border-color 0.14s;
+}
+.ds-note-input::placeholder { color:var(--text-dim); font-style:italic; }
+.ds-note-input:focus { border-color:var(--green); }
+
+/* ── CONDITIONAL BOXES ── */
+.cond-box {
+  display:none; margin-top:10px;
+  padding:12px 14px;
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  animation:fadeUp 0.18s ease;
+}
+.cond-box.show { display:block; }
+
+/* ── CHANNEL SECTIONS (clean, no icons, divider-separated) ── */
+.channel-cards { display:flex; flex-direction:column; gap:0; margin-top:14px; }
+.channel-card {
+  padding:16px 0;
+  border-top:1px solid var(--border);
+}
+.channel-card:first-child { border-top:none; padding-top:8px; }
+.channel-card-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:12px;
+}
+.channel-card-ico { display:none; }
+.channel-card-name {
+  font-family:var(--font-sans); font-size:var(--t-xs); font-weight:700;
+  color:var(--text-muted); text-transform:uppercase; letter-spacing:var(--ls-widest);
+}
+.channel-card-body { display:flex; flex-direction:column; gap:12px; }
+
+/* ── STORE NAME INPUTS ── */
+.store-names-list { display:flex; flex-direction:column; gap:7px; margin-top:4px; }
+
+/* ── CM1 INDICATOR — matches CM2/CM3 style exactly ── */
+.cm1-indicator {
+  margin:0 0 14px;
+}
+.cm1-indicator .m-block { margin-top:0; }
+
+/* ── 6-COLUMN METRICS TABLE ── */
+.m-row-6 { display:grid; grid-template-columns:1.8fr 0.85fr 1.1fr 1fr 1.4fr 60px; }
+.m-row-6.m-hdr > * {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:var(--ls-wide); color:var(--text-muted);
+}
+.m-row-6:not(:last-child) { border-bottom:1px solid var(--border); }
+.m-row-6 > * { padding:9px 12px; font-size:13px; }
+.m-row-6 > *:not(:last-child) { border-right:1px solid var(--border); }
+
+/* ── ASSUMPTIONS TABLE ── */
+.assump-tbl { width:100%; border-collapse:collapse; margin-top:4px; }
+.assump-tbl th {
+  text-align:left; padding:8px 12px;
+  font-family:var(--font-sans); font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wide);
+  color:var(--text-muted); background:var(--surface-2);
+  border-bottom:2px solid var(--border);
+}
+.assump-tbl td { padding:4px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+.assump-tbl tr:last-child td { border-bottom:none; }
+.assump-tbl .ci {
+  background:none; border:none; outline:none;
+  font-family:var(--font-sans); font-size:var(--t-sm);
+  color:var(--text-primary); width:100%; padding:6px 4px;
+}
+.assump-tbl .ci::placeholder { color:var(--text-dim); font-style:italic; }
+.assump-tbl textarea.ci {
+  resize:vertical; min-height:52px; line-height:var(--lh-relaxed);
+}
+
+/* ── RISKS TABLE ── */
+.risk-tbl { width:100%; border-collapse:collapse; margin-top:4px; }
+.risk-tbl th {
+  text-align:left; padding:8px 12px;
+  font-family:var(--font-sans); font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wide);
+  color:var(--text-muted); background:var(--surface-2);
+  border-bottom:2px solid var(--border);
+}
+.risk-tbl td { padding:4px 8px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.risk-tbl tr:last-child td { border-bottom:none; }
+.risk-tbl .ci {
+  background:none; border:none; outline:none;
+  font-family:var(--font-sans); font-size:var(--t-sm);
+  color:var(--text-primary); width:100%; padding:6px 4px;
+}
+.risk-tbl .ci::placeholder { color:var(--text-dim); font-style:italic; }
+.risk-sev {
+  background:var(--surface-3); border:1px solid var(--border);
+  border-radius:var(--radius-xs); font-family:var(--font-sans);
+  font-size:var(--t-sm); color:var(--text-secondary);
+  padding:5px 8px; outline:none; appearance:none; cursor:pointer; width:100%;
+}
+.risk-del { text-align:center; width:40px; }
+
+/* ── SUCCESS CRITERIA (clean grid, same as original) ── */
+.success-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
+.success-card {
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:16px 18px;
+}
+.success-card-lbl {
+  font-family:var(--font-sans); font-size:var(--t-xs); font-weight:700;
+  text-transform:uppercase; letter-spacing:var(--ls-wider);
+  color:var(--text-muted); margin-bottom:10px;
+}
+
+/* ── KPI PAGE FULL WIDTH — only affects step-2 ── */
+/* Expand the card body on KPI page using negative margins to reclaim padding space */
+#step-2 .card-body { padding:20px 0 20px; }
+#step-2 .callout  { margin:0 24px 16px; }
+#step-2 .btn-add  { margin:12px 24px 0; }
+/* When body has kpi-active, widen main container */
+body.kpi-active main { max-width:1380px; }
+.ds-method-sel {
+  background:var(--surface-3); border:1px solid var(--border);
+  border-radius:6px; color:var(--text-secondary);
+  padding:3px 6px; font-size:12px; outline:none;
+  font-family:var(--font-sans); appearance:none; cursor:pointer; width:100%;
+}
+.ds-latency-input {
+  background:none; border:none; border-bottom:1px dashed var(--border);
+  outline:none; font-family:var(--font-sans); font-size:12px;
+  color:var(--text-primary); width:100%; padding:2px 0;
+}
+.ds-latency-input:focus { border-color:var(--green); }
+
+
+/* ── PACKAGE SELECTOR ── */
+.pkg-selector {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; padding:40px 20px;
+  background:var(--bg);
+}
+.pkg-selector-inner {
+  text-align:center; max-width:680px; width:100%;
+}
+.pkg-selector-logo {
+  margin-bottom:32px;
+  display:flex; align-items:center; justify-content:center; gap:12px;
+}
+.pkg-selector-title {
+  font-family:var(--font-serif); font-size:var(--t-2xl); font-weight:600;
+  color:var(--text-primary); margin-bottom:8px; letter-spacing:var(--ls-tight);
+}
+.pkg-selector-sub {
+  font-family:var(--font-sans); font-size:var(--t-base); color:var(--text-muted);
+  margin-bottom:48px; line-height:var(--lh-relaxed);
+}
+.pkg-cards { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.pkg-card {
+  background:var(--surface); border:2px solid var(--border);
+  border-radius:var(--radius-lg); padding:32px 28px;
+  cursor:pointer; transition:all 0.2s; text-align:left;
+  position:relative; overflow:hidden;
+}
+.pkg-card:hover { border-color:var(--green); box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.pkg-card.active { border-color:var(--green); box-shadow:0 0 0 3px rgba(26,127,90,0.12); }
+.pkg-card-badge {
+  display:inline-block; font-family:var(--font-sans);
+  font-size:var(--t-xs); font-weight:700; text-transform:uppercase;
+  letter-spacing:var(--ls-wider); padding:4px 12px; border-radius:20px;
+  margin-bottom:16px;
+}
+.pkg-card-badge.essential { background:var(--green-hover); color:var(--green); border:1px solid var(--green-border); }
+.pkg-card-badge.advanced  { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-border); }
+.pkg-card-name {
+  font-family:var(--font-serif); font-size:var(--t-xl); font-weight:600;
+  color:var(--text-primary); margin-bottom:10px; letter-spacing:var(--ls-tight);
+}
+.pkg-card-desc {
+  font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-secondary);
+  line-height:var(--lh-relaxed); margin-bottom:20px;
+}
+.pkg-card-list {
+  list-style:none; padding:0; margin:0;
+}
+.pkg-card-list li {
+  font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-secondary);
+  padding:4px 0; display:flex; align-items:center; gap:8px;
+}
+.pkg-card-list li::before {
+  content:''; width:6px; height:6px; border-radius:50%;
+  background:var(--green); flex-shrink:0;
+}
+.pkg-card.advanced .pkg-card-list li::before { background:var(--blue); }
+.pkg-card-btn {
+  width:100%; margin-top:24px; padding:12px;
+  border:none; border-radius:var(--radius-sm);
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:600;
+  cursor:pointer; transition:all 0.16s;
+}
+.pkg-card-btn.essential { background:var(--green); color:#fff; box-shadow:0 2px 8px rgba(26,127,90,0.3); }
+.pkg-card-btn.essential:hover { background:var(--green-dark); }
+.pkg-card-btn.advanced { background:var(--surface-3); color:var(--text-secondary); border:1px solid var(--border); }
+
+/* ── PLATFORM MULTI-SELECT — FIXED LAYOUT ── */
+.plat-select-wrap { position:relative; width:100%; }
+.plat-select-display {
+  min-height:38px; padding:6px 32px 6px 10px;
+  background:var(--input-bg); border:1px solid var(--input-border);
+  border-radius:var(--radius-sm); cursor:pointer;
+  display:flex; align-items:center; flex-wrap:wrap; gap:4px;
+  font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-muted);
+  transition:border-color 0.15s; position:relative; user-select:none;
+  box-sizing:border-box; min-width:0;
+}
+.plat-select-display::after {
+  content:'▾'; position:absolute; right:10px; top:50%;
+  transform:translateY(-50%); color:var(--text-muted); font-size:11px;
+  pointer-events:none; transition:transform 0.2s;
+}
+.plat-select-display.open::after { transform:translateY(-50%) rotate(180deg); }
+.plat-select-display:hover { border-color:var(--border-2); }
+.plat-select-display.open { border-color:var(--green); box-shadow:0 0 0 3px rgba(26,127,90,0.1); }
+.plat-ph {
+  color:var(--text-muted); font-size:13px; /* no pointer-events:none so clicks work */
+}
+.plat-tag {
+  background:var(--green-hover); color:var(--green);
+  border:1px solid var(--green-border);
+  padding:2px 8px 2px 10px; border-radius:12px;
+  font-size:11px; font-weight:600; display:inline-flex; align-items:center; gap:4px;
+  white-space:nowrap; flex-shrink:0;
+}
+.plat-tag-x {
+  cursor:pointer; font-size:14px; line-height:1;
+  color:var(--green); opacity:0.6; padding:0 1px;
+}
+.plat-tag-x:hover { opacity:1; }
+.plat-dropdown {
+  display:none; position:fixed; /* fixed escapes overflow:hidden parents */
+  min-width:180px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); box-shadow:var(--shadow-lg);
+  z-index:9999;
+}
+.plat-dropdown.open { display:block; }
+.plat-option {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; cursor:pointer;
+  font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-secondary);
+  transition:background 0.1s; white-space:nowrap; user-select:none;
+}
+.plat-option:hover { background:var(--surface-2); color:var(--text-primary); }
+.plat-option.selected { color:var(--green); background:var(--green-hover); }
+.plat-option input[type=checkbox] {
+  accent-color:var(--green); width:14px; height:14px;
+  flex-shrink:0; cursor:pointer; pointer-events:none;
+}
+.plat-all-opt { border-bottom:1px solid var(--border); font-weight:600; color:var(--text-primary); }
+.plat-all-opt.selected { color:var(--green); }
+
+/* ── 3-COLUMN METRIC TABLE (Revenue, Net Sales, OpEx, Mktg) ── */
+.m-row-3 { display:grid; grid-template-columns:1.6fr 1.8fr 1fr 38px; }
+.m-row-3.m-hdr > * { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:var(--ls-wide); color:var(--text-muted); }
+.m-row-3:not(:last-child) { border-bottom:1px solid var(--border); }
+.m-row-3 > * { padding:9px 12px; font-size:13px; }
+.m-row-3 > *:not(:last-child) { border-right:1px solid var(--border); }
+.m-row-3 .m-del { display:flex; align-items:center; justify-content:center; padding:6px; }
+
+/* ── NET SALES FORMULA BOX ── */
+.net-sales-formula {
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:14px 18px; margin-top:14px;
+  font-family:var(--font-sans); font-size:13.5px; color:var(--text-primary);
+  line-height:1.7; font-weight:500;
+}
+.net-sales-formula strong { color:var(--green); }
+
+/* ── DEFAULT DECISIONS LIST ── */
+.default-decisions {
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;
+}
+.default-decision-tag {
+  background:var(--green-hover); color:var(--green);
+  border:1px solid var(--green-border);
+  padding:5px 14px; border-radius:20px;
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:500;
+}
+
+/* ── CHANNEL EXPAND (click to expand) ── */
+.channel-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer;
+  transition:background 0.12s;
+}
+.channel-row:last-child { border-bottom:none; }
+.channel-row:hover { background:var(--surface-2); margin:0 -22px; padding:12px 22px; border-radius:var(--radius-xs); }
+.channel-row-name { font-family:var(--font-sans); font-size:var(--t-base); font-weight:600; color:var(--text-primary); }
+.channel-row-chevron { width:24px; height:24px; display:flex; align-items:center; justify-content:center; color:var(--text-muted); transition:transform 0.2s; }
+.channel-row.open .channel-row-chevron { transform:rotate(180deg); }
+.channel-detail {
+  display:none; padding:16px 0 8px;
+  border-bottom:1px solid var(--border); margin-bottom:4px;
+}
+.channel-detail.open { display:block; }
+
+/* ── AMAZON ACCOUNT ROWS ── */
+.amz-row {
+  display:flex; align-items:center; gap:10px; margin-bottom:8px;
+}
+.amz-row-label { font-family:var(--font-sans); font-size:var(--t-sm); font-weight:500; color:var(--text-primary); min-width:140px; }
+
+/* ── FIXED VALUES (read-only display) ── */
+.fixed-val {
+  background:var(--surface-3); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:10px 14px;
+  font-family:var(--font-sans); font-size:var(--t-base); color:var(--text-secondary);
+  width:100%; cursor:default;
+}
+
+/* ── KPI DICTIONARY TABLE — BEAUTIFUL ── */
+/* ── KPI PAGE FULL WIDTH — only affects step-2 ── */
+#step-2 .card-body { padding:0; }
+body.kpi-active main { max-width:1380px; }
+
+/* ── KPI DICTIONARY TABLE ── */
+.kpi-scroll-wrap {
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  border-radius:var(--radius-md);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+  margin:0 24px;
+}
+.kpi-callout-pad { padding:20px 24px 0; }
+.kpi-btn-pad     { padding:12px 24px 20px; }
+
+.kpi-tbl {
+  width:100%;
+  min-width:1100px; /* triggers scroll on narrow screens */
+  border-collapse:collapse;
+  font-size:13px;
+  table-layout:fixed;
+}
+
+/* Column widths — sum = 100% of min-width */
+.kpi-name-cell  { width:130px; }
+.kpi-def-cell   { width:210px; }
+.kpi-src-cell   { width:110px; }
+.kpi-grain-cell { width:150px; }
+.kpi-sot-cell   { width:160px; } /* ×3 = 480px */
+.kpi-sla-cell   { width:60px;  }
+.kpi-del-cell   { width:40px;  }
+
+.kpi-tbl thead tr {
+  background:linear-gradient(135deg, #17375E 0%, #2056C8 100%);
+}
+.kpi-tbl th {
+  text-align:left;
+  padding:13px 12px;
+  font-family:var(--font-sans);
+  font-size:10.5px; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.55px;
+  color:#fff; border:none;
+  white-space:normal; line-height:1.4;
+  vertical-align:bottom;
+}
+.kpi-tbl tbody tr { border-bottom:1px solid var(--border); }
+.kpi-tbl tbody tr:last-child { border-bottom:none; }
+.kpi-tbl td {
+  padding:0;
+  vertical-align:top;
+  border-right:1px solid var(--border);
+}
+.kpi-tbl td:last-child { border-right:none; }
+.kpi-tbl tbody tr:nth-child(odd)  td { background:var(--surface); }
+.kpi-tbl tbody tr:nth-child(even) td { background:var(--surface-2); }
+.kpi-tbl tbody tr.kpi-cm-row td  { background:rgba(26,127,90,0.07) !important; }
+.kpi-tbl tbody tr.kpi-cm-row:hover td { background:rgba(26,127,90,0.12) !important; }
+.kpi-tbl tbody tr:hover td { background:var(--blue-bg) !important; }
+.kpi-tbl tbody tr.kpi-cm-row .kci { color:var(--green); font-weight:700; }
+
+.kci {
+  background:transparent; border:none; outline:none;
+  font-family:var(--font-sans); font-size:11.5px;
+  color:var(--text-primary);
+  width:100%; padding:8px 11px;
+  display:block; box-sizing:border-box;
+  line-height:1.45; word-wrap:break-word; white-space:pre-wrap;
+}
+.kci:focus {
+  background:rgba(32,86,200,0.05);
+  box-shadow:inset 0 0 0 2px rgba(32,86,200,0.25);
+}
+.kci::placeholder { color:var(--text-dim); font-style:italic; }
+textarea.kci { resize:none; min-height:auto; overflow:hidden; }
+.kci-bold { font-weight:600; }
+
+/* ── ADVANCED PLACEHOLDER ── */
+.adv-placeholder {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:60vh; text-align:center; padding:40px;
+}
+.adv-placeholder-icon { font-size:56px; margin-bottom:24px; }
+.adv-placeholder-title { font-family:var(--font-serif); font-size:var(--t-2xl); font-weight:600; color:var(--text-primary); margin-bottom:12px; }
+.adv-placeholder-body { font-family:var(--font-sans); font-size:var(--t-md); color:var(--text-muted); max-width:400px; line-height:var(--lh-relaxed); margin-bottom:28px; }
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+</head>
+<body>
+
+
+<!-- ════════════════ PACKAGE SELECTOR ════════════════ -->
+<div id="pkg-selector" class="pkg-selector">
+  <div class="pkg-selector-inner">
+    <div class="pkg-selector-logo">
+      <div class="hdr-logo" style="width:44px;height:44px;border-radius:11px">
+        <span class="hdr-logo-letter" style="font-size:22px">S</span>
+      </div>
+      <div>
+        <span class="hdr-wordmark-saras" style="font-size:20px">saras</span>
+        <span class="hdr-wordmark-product" style="font-size:15px;margin-left:6px">CM Command Center</span>
+      </div>
+    </div>
+    <h1 class="pkg-selector-title">Select Your Package</h1>
+    <p class="pkg-selector-sub">Choose the CM BRD package that matches your engagement scope. You can change this at any time.</p>
+    <div class="pkg-cards">
+      <div class="pkg-card" onclick="selectPackage('essential')">
+        <div class="pkg-card-badge essential">Recommended</div>
+        <div class="pkg-card-name">Essential Package</div>
+        <div class="pkg-card-desc">Standard CM reporting across Amazon, Shopify, and TikTok. 4–6 week delivery.</div>
+        <ul class="pkg-card-list">
+          <li>CM1 / CM2 / CM3 reporting</li>
+          <li>Daily, channel-wise, geo-wise views</li>
+          <li>New vs returning customer analysis</li>
+          <li>KPI dictionary and SLA tracking</li>
+        </ul>
+        <button class="pkg-card-btn essential">Start Essential Flow →</button>
+      </div>
+      <div class="pkg-card" onclick="selectPackage('advanced')">
+        <div class="pkg-card-badge advanced">Coming Soon</div>
+        <div class="pkg-card-name">Advanced Package</div>
+        <div class="pkg-card-desc">Product/cart/customer-level CM3, ERP costs, and bespoke logic. Scoped separately.</div>
+        <ul class="pkg-card-list">
+          <li>Everything in Essential</li>
+          <li>ERP-level COGS integration</li>
+          <li>Custom CM logic</li>
+          <li>Product & cart level analysis</li>
+        </ul>
+        <button class="pkg-card-btn advanced">Advanced Package →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ ADVANCED PLACEHOLDER ════════════════ -->
+<div id="adv-placeholder" style="display:none">
+  <div class="adv-placeholder">
+    <div class="adv-placeholder-icon">🔬</div>
+    <h2 class="adv-placeholder-title">Advanced Package</h2>
+    <p class="adv-placeholder-body">The Advanced Package flow will be added in future versions. It will include ERP-level COGS, custom CM logic, and product / cart / customer-level analysis.</p>
+    <button class="btn-back" onclick="showPkgSelector()">← Back to Package Selection</button>
+  </div>
+</div>
+
+<!-- ════════════════ ESSENTIAL APP ════════════════ -->
+<div id="essential-app" style="display:none">
+
+<!-- ════════════════ HEADER ════════════════ -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-logo"><span class="hdr-logo-letter">S</span></div>
+    <div class="hdr-wordmark">
+      <span class="hdr-wordmark-saras">saras</span>
+      <span class="hdr-wordmark-product">CM Command Center</span>
+    </div>
+    <div class="hdr-badge">Essential Package</div>
+  </div>
+  <div class="hdr-right">
+    <div class="prog-pill">
+      <span class="prog-lbl">Completion</span>
+      <div class="prog-track"><div class="prog-fill" id="progressFill"></div></div>
+      <span class="prog-pct" id="progressPct">0%</span>
+    </div>
+    <button class="btn-theme" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">☀️</button>
+    <button class="btn-reset" onclick="openModal('resetModal')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      Reset
+    </button>
+    <button class="btn-export locked" id="exportBtn" onclick="openExportModal()" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span id="exportLabel">Export BRD</span>
+    </button>
+  </div>
+</header>
+
+<!-- ════════════════ PRIMARY NAV ════════════════ -->
+<nav class="nav-primary">
+  <button class="nav-tab active" onclick="switchTab('req',this)">📋 Requirement Gathering</button>
+  <button class="nav-tab" onclick="switchTab('dash',this)">📊 CM Dashboard Mock</button>
+  <button class="nav-tab" onclick="switchTab('val',this)">
+    ✅ Validation <span class="nav-badge" id="valBadge" style="display:none">0</span>
+  </button>
+  <button class="nav-tab" onclick="switchTab('check',this)">☑ Checklists</button>
+  <button class="nav-tab" onclick="switchTab('next',this)">🚀 Next Steps &amp; Gates</button>
+</nav>
+
+<!-- ════════════════ SECONDARY NAV (PILLS) — 4 pages ════════════════ -->
+<div class="nav-secondary">
+  <div class="step-pills-container">
+    <div class="step-pill active" data-step="0" onclick="goStep(0)">
+      <div class="pill-num" id="pn0">1</div>
+      Reporting Foundations
+    </div>
+    <div class="pill-divider"></div>
+    <div class="step-pill" data-step="1" onclick="goStep(1)">
+      <div class="pill-num" id="pn1">2</div>
+      Revenue &amp; Costs
+    </div>
+    <div class="pill-divider"></div>
+    <div class="step-pill" data-step="2" onclick="goStep(2)">
+      <div class="pill-num" id="pn2">3</div>
+      KPI Dictionary &amp; SLA
+    </div>
+    <div class="pill-divider"></div>
+    <div class="step-pill" data-step="3" onclick="goStep(3)">
+      <div class="pill-num" id="pn3">4</div>
+      Scope Lock (BRD)
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<main>
+<div class="tab-panel active" id="tab-req">
+
+<!-- ══════════════════════════════════════════════════
+     PAGE 1 — REPORTING FOUNDATIONS
+══════════════════════════════════════════════════ -->
+<div class="step-panel active" id="step-0">
+
+  <!-- S1: Objective & Engagement -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">🎯</div><div class="card-ttl">Objective &amp; Engagement</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="field"><label>Client Name <span class="req">*</span></label><input class="ctrl" type="text" id="clientName" placeholder="Client or brand group name" oninput="syncProgress()"></div>
+        <div class="field"><label>Project Title <span class="req">*</span></label><input class="ctrl" type="text" id="projectTitle" placeholder="e.g. CM Reporting — Amazon + Shopify" oninput="syncProgress()"></div>
+        <div class="field"><label>Prepared By</label><input class="ctrl" type="text" id="preparedBy" placeholder="Engagement lead name(s)"></div>
+        <div class="field"><label>Date</label><input class="ctrl" type="date" id="brdDate"></div>
+        <div class="field"><label>Prepared For</label><input class="ctrl" type="text" id="preparedFor" placeholder="e.g. Leadership, Finance, Marketing"></div>
+        <div class="field">
+          <label>Mode of Delivery</label>
+          <select class="ctrl ctrl-sel" id="biPlatform" onchange="toggleDeliveryOther()">
+            <option value="">— Select —</option>
+            <option value="Power BI Report">Power BI Report</option>
+            <option value="Tableau Report">Tableau Report</option>
+            <option value="Pulse UI">Pulse UI</option>
+            <option value="GSheet">GSheet</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="cond-box" id="deliveryOtherBox">
+            <div class="field"><label>Specify delivery mode</label><input class="ctrl" type="text" id="biPlatformOther" placeholder="Describe custom delivery mode…"></div>
+          </div>
+        </div>
+        <div class="field form-full"><label>Current Business Problem <span class="req">*</span></label><textarea class="ctrl" id="bizProblem" placeholder="Describe current gaps in profitability visibility, manual effort, cross-channel blind spots…" oninput="syncProgress()"></textarea></div>
+        <div class="field form-full"><label>Project Objective <span class="req">*</span></label><textarea class="ctrl" id="projObjective" placeholder="What this engagement will deliver and the outcome for the business…" oninput="syncProgress()"></textarea></div>
+      </div>
+      <div class="sec-div" style="margin-top:20px">Key Decisions CM Will Support</div>
+      <div class="default-decisions">
+        <span class="default-decision-tag">Daily CM Analysis</span>
+        <span class="default-decision-tag">New vs Returning Customer</span>
+        <span class="default-decision-tag">Channel-wise CM</span>
+        <span class="default-decision-tag">Geo-wise CM</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: Stakeholders -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">👥</div><div class="card-ttl">Stakeholders</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="sh-row sh-hdr">
+        <div>Role</div><div>Name(s)</div><div>Responsibility</div><div></div>
+      </div>
+      <div id="stakeholderList">
+        <div class="sh-row">
+          <input class="sh-input" type="text" value="Primary Stakeholders" style="font-weight:600">
+          <input class="sh-input" type="text" placeholder="Name(s)">
+          <input class="sh-input" type="text" placeholder="Strategic oversight, business alignment…">
+          <button class="btn-del" onclick="this.closest('.sh-row').remove()">×</button>
+        </div>
+        <div class="sh-row">
+          <input class="sh-input" type="text" value="Secondary Stakeholders" style="font-weight:600">
+          <input class="sh-input" type="text" placeholder="Name(s)">
+          <input class="sh-input" type="text" placeholder="Cost allocation, financial review…">
+          <button class="btn-del" onclick="this.closest('.sh-row').remove()">×</button>
+        </div>
+      </div>
+      <button class="btn-add" onclick="addStakeholder()">+ Add Stakeholder</button>
+    </div>
+  </div>
+
+  <!-- S3: Accounting Orientation -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">📅</div><div class="card-ttl">Accounting Orientation &amp; Date Basis</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="field">
+          <label>Reporting Date Basis</label>
+          <div class="fixed-val">Order Date</div>
+        </div>
+        <div class="field">
+          <label>Reporting Currency <span class="req">*</span></label>
+          <select class="ctrl ctrl-sel" id="reportingCurrency">
+            <option value="USD">USD — US Dollar</option>
+            <option value="GBP">GBP — British Pound</option>
+            <option value="EUR">EUR — Euro</option>
+            <option value="CAD">CAD — Canadian Dollar</option>
+            <option value="AUD">AUD — Australian Dollar</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>FX Methodology</label>
+          <div class="fixed-val">Daily Exchange Rates</div>
+        </div>
+        <div class="field">
+          <label>Refresh Cadence</label>
+          <div class="fixed-val">Daily Automated</div>
+        </div>
+        <div class="field">
+          <label>Reporting Calendar</label>
+          <div class="fixed-val">Standard</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4: Sales Channel & Ad Platform Configuration -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">🏪</div><div class="card-ttl">Sales Channel &amp; Ad Platform Configuration</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+
+      <!-- ── SALES CHANNEL CONTAINER ── -->
+      <div class="sec-div" style="margin-top:6px">Sales Channel</div>
+
+      <!-- Amazon -->
+      <div class="channel-row" id="ch-amazon-row" onclick="toggleChannel('amazon')">
+        <span class="channel-row-name">Amazon</span>
+        <span class="channel-row-chevron">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+      </div>
+      <div class="channel-detail" id="ch-amazon-detail">
+        <div id="amazonAccountList">
+          <div class="amz-row">
+            <span class="amz-row-label">Seller Central</span>
+            <input class="ctrl" type="text" placeholder="Marketplaces e.g. US, CA, MX" style="flex:1">
+            <button class="btn-del" onclick="this.closest('.amz-row').remove()">×</button>
+          </div>
+          <div class="amz-row">
+            <span class="amz-row-label">Vendor Central</span>
+            <input class="ctrl" type="text" placeholder="Marketplaces e.g. US, CA" style="flex:1">
+            <button class="btn-del" onclick="this.closest('.amz-row').remove()">×</button>
+          </div>
+        </div>
+        <button class="btn-add" style="margin-top:8px" onclick="addAmazonRow()">+ Add Account Row</button>
+        <div class="field" style="margin-top:12px">
+          <label>Historic Data Support</label>
+          <input class="ctrl" type="text" id="amazonHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+        </div>
+      </div>
+
+      <!-- Shopify -->
+      <div class="channel-row" id="ch-shopify-row" onclick="toggleChannel('shopify')">
+        <span class="channel-row-name">Shopify</span>
+        <span class="channel-row-chevron">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+      </div>
+      <div class="channel-detail" id="ch-shopify-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label>Number of Stores</label>
+            <select class="ctrl ctrl-sel" id="shopifyStoreCount" onchange="updateShopifyStores()">
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Non-DTC Orders in Shopify?</label>
+            <select class="ctrl ctrl-sel" id="nonDtcShopify"><option value="No">No</option><option value="Yes">Yes</option></select>
+          </div>
+        </div>
+        <div id="shopifyStoreNames" class="store-names-list"></div>
+        <div class="field" style="margin-top:12px">
+          <label>Historic Data Support</label>
+          <input class="ctrl" type="text" id="shopifyHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+        </div>
+      </div>
+
+      <!-- TikTok -->
+      <div class="channel-row" id="ch-tiktok-row" onclick="toggleChannel('tiktok')">
+        <span class="channel-row-name">TikTok</span>
+        <span class="channel-row-chevron">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+      </div>
+      <div class="channel-detail" id="ch-tiktok-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label>Shop Configuration</label>
+            <select class="ctrl ctrl-sel" id="tiktokShopConfig">
+              <option value="Single Shop">Single Shop</option>
+              <option value="Multiple Shops">Multiple Shops</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>TikTok-in-Shopify Flow?</label>
+            <select class="ctrl ctrl-sel" id="tiktokShopify"><option value="No">No</option><option value="Yes">Yes</option></select>
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>Store Details</label>
+          <input class="ctrl" type="text" id="tiktokNotes" placeholder="Single Shop / Multiple Shops — any additional configuration details…">
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>Historic Data Support</label>
+          <input class="ctrl" type="text" id="tiktokHistoric" placeholder="e.g. 18 months, Mar 2023 onwards…">
+        </div>
+      </div>
+
+      <!-- ── AD PLATFORMS CONTAINER ── -->
+      <div class="sec-div" style="margin-top:22px">Ad Platforms</div>
+      <div id="adPlatformList">
+        <div class="channel-row" id="ch-amzads-row" onclick="toggleChannel('amzads')">
+          <span class="channel-row-name">Amazon Ads <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(SP, SB, SD)</span></span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('amzads')" style="flex-shrink:0">×</button>
+          </div>
+        </div>
+        <div class="channel-detail" id="ch-amzads-detail">
+          <div class="form-grid" style="margin-top:0">
+            <div class="field">
+              <label>Historic Data Support</label>
+              <input class="ctrl" type="text" id="amzAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <input class="ctrl" type="text" id="amzAdsNotes" placeholder="Integration details, data availability notes…">
+            </div>
+          </div>
+        </div>
+
+        <div class="channel-row" id="ch-tiktokads-row" onclick="toggleChannel('tiktokads')">
+          <span class="channel-row-name">TikTok Ads</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('tiktokads')" style="flex-shrink:0">×</button>
+          </div>
+        </div>
+        <div class="channel-detail" id="ch-tiktokads-detail">
+          <div class="form-grid" style="margin-top:0">
+            <div class="field">
+              <label>Historic Data Support</label>
+              <input class="ctrl" type="text" id="tiktokAdsHistoric" placeholder="e.g. 18 months, Mar 2023 onwards…">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <input class="ctrl" type="text" id="tiktokAdsNotes" placeholder="Integration details, data availability notes…">
+            </div>
+          </div>
+        </div>
+
+        <div class="channel-row" id="ch-googleads-row" onclick="toggleChannel('googleads')">
+          <span class="channel-row-name">Google Ads</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('googleads')" style="flex-shrink:0">×</button>
+          </div>
+        </div>
+        <div class="channel-detail" id="ch-googleads-detail">
+          <div class="form-grid" style="margin-top:0">
+            <div class="field">
+              <label>Historic Data Support</label>
+              <input class="ctrl" type="text" id="googleAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <input class="ctrl" type="text" id="googleAdsNotes" placeholder="Integration details, data availability notes…">
+            </div>
+          </div>
+        </div>
+
+        <div class="channel-row" id="ch-metaads-row" onclick="toggleChannel('metaads')">
+          <span class="channel-row-name">Meta Ads</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('metaads')" style="flex-shrink:0">×</button>
+          </div>
+        </div>
+        <div class="channel-detail" id="ch-metaads-detail">
+          <div class="form-grid" style="margin-top:0">
+            <div class="field">
+              <label>Historic Data Support</label>
+              <input class="ctrl" type="text" id="metaAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <input class="ctrl" type="text" id="metaAdsNotes" placeholder="Integration details, data availability notes…">
+            </div>
+          </div>
+        </div>
+
+        <div class="channel-row" id="ch-msads-row" onclick="toggleChannel('msads')">
+          <span class="channel-row-name">Microsoft Ads</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('msads')" style="flex-shrink:0">×</button>
+          </div>
+        </div>
+        <div class="channel-detail" id="ch-msads-detail">
+          <div class="form-grid" style="margin-top:0">
+            <div class="field">
+              <label>Historic Data Support</label>
+              <input class="ctrl" type="text" id="msAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <input class="ctrl" type="text" id="msAdsNotes" placeholder="Integration details, data availability notes…">
+            </div>
+          </div>
+        </div>
+
+        <div class="channel-row" id="ch-snapads-row" onclick="toggleChannel('snapads')">
+          <span class="channel-row-name">Snapchat</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('snapads')" style="flex-shrink:0">×</button>
+          </div>
+        </div>
+        <div class="channel-detail" id="ch-snapads-detail">
+          <div class="form-grid" style="margin-top:0">
+            <div class="field">
+              <label>Historic Data Support</label>
+              <input class="ctrl" type="text" id="snapAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <input class="ctrl" type="text" id="snapAdsNotes" placeholder="Integration details, data availability notes…">
+            </div>
+          </div>
+        </div>
+
+        <div class="channel-row" id="ch-pintads-row" onclick="toggleChannel('pintads')">
+          <span class="channel-row-name">Pinterest</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('pintads')" style="flex-shrink:0">×</button>
+          </div>
+        </div>
+        <div class="channel-detail" id="ch-pintads-detail">
+          <div class="form-grid" style="margin-top:0">
+            <div class="field">
+              <label>Historic Data Support</label>
+              <input class="ctrl" type="text" id="pintAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <input class="ctrl" type="text" id="pintAdsNotes" placeholder="Integration details, data availability notes…">
+            </div>
+          </div>
+        </div>
+
+        <div class="channel-row" id="ch-applovin-row" onclick="toggleChannel('applovin')">
+          <span class="channel-row-name">Applovin</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
+            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('applovin')" style="flex-shrink:0">×</button>
+          </div>
+        </div>
+        <div class="channel-detail" id="ch-applovin-detail">
+          <div class="form-grid" style="margin-top:0">
+            <div class="field">
+              <label>Historic Data Support</label>
+              <input class="ctrl" type="text" id="applovinHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+            </div>
+            <div class="field">
+              <label>Notes</label>
+              <input class="ctrl" type="text" id="applovinNotes" placeholder="Integration details, data availability notes…">
+            </div>
+          </div>
+        </div>
+      </div><!-- /adPlatformList -->
+
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <div></div>
+    <button class="btn-fwd" onclick="nextStep()">Revenue &amp; Costs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+</div><!-- /step-0 -->
+
+<!-- ══════════════════════════════════════════════════
+     PAGE 2 — REVENUE & COSTS
+══════════════════════════════════════════════════ -->
+<div class="step-panel" id="step-1">
+
+  <!-- 1. Revenue Components -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">📈</div><div class="card-ttl">Revenue Components</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="m-block" style="margin-top:6px">
+        <div class="m-head mh-blue">① Revenue Metrics</div>
+        <div class="m-rows" id="revenueRows">
+          <div class="m-row-3 m-hdr">
+            <div class="m-name">Revenue Metric</div>
+            <div>Platform</div>
+            <div>Notes</div>
+            <div></div>
+          </div>
+          <div class="m-row-3" id="rev-gross-sales">
+            <div class="m-name">Gross Sales</div>
+            <div id="ps-gross-sales" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="Total order value before deductions…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3" id="rev-shipping">
+            <div class="m-name">Shipping Revenue</div>
+            <div id="ps-shipping" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="Shipping charges collected from customers…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3" id="rev-giftwrap">
+            <div class="m-name">Giftwrap Revenue</div>
+            <div id="ps-giftwrap" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="Gift wrap fees charged to buyers…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div id="revenueExtra"></div>
+        </div>
+        <button class="btn-add" onclick="addRevenueRow()">+ Add Revenue Metric</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Net Sales Construction -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">💰</div><div class="card-ttl">Net Sales Construction</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="m-block" style="margin-top:6px">
+        <div class="m-head mh-blue">② Deductions</div>
+        <div class="m-rows" id="netSalesRows">
+          <div class="m-row-3 m-hdr">
+            <div class="m-name">Metric</div>
+            <div>Platform</div>
+            <div>Notes</div>
+            <div></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Refunds</div>
+            <div id="ps-refunds" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" value="Refund will be attributed on Order Date"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Promo / Discounts</div>
+            <div id="ps-promo" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="Order-level discounts deducted from Gross Sales…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div id="netSalesExtra"></div>
+        </div>
+        <button class="btn-add" onclick="addNetSalesRow()">+ Add Deduction Metric</button>
+      </div>
+      <div class="net-sales-formula">
+        <strong>Net Sales</strong> = Gross Sales + Shipping Revenue + Giftwrap Revenue − Promo / Discounts − Refunds
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. COGS Configuration -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">⚙️</div><div class="card-ttl">COGS Configuration</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="field">
+          <label>COGS Source</label>
+          <div class="fixed-val">Google Sheet</div>
+        </div>
+        <div class="field">
+          <label>COGS Granularity</label>
+          <div class="fixed-val">SKU Level</div>
+        </div>
+        <div class="field">
+          <label>COGS Update Frequency</label>
+          <select class="ctrl ctrl-sel" id="cogsFrequency">
+            <option selected>Monthly</option>
+            <option>Weekly</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Include Inbound Freight?</label>
+          <select class="ctrl ctrl-sel" id="cogsInboundFreight" onchange="toggleInboundFreight()">
+            <option value="Yes — included in landed cost">Yes — included in landed cost</option>
+            <option value="No — tracked separately">No — tracked separately</option>
+            <option value="Partial">Partial</option>
+          </select>
+          <div class="cond-box" id="inboundFreightBox">
+            <div class="field"><label>Inbound Freight Cost Details</label><input class="ctrl" type="text" placeholder="$/unit, source system, allocation logic…"></div>
+          </div>
+        </div>
+        <div class="field form-full"><label>Additional Notes</label>
+          <textarea class="ctrl" id="cogsNotes" placeholder="Brand-to-SKU mapping, cost period dates, special cost handling…"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CM1 Indicator -->
+  <div class="card">
+    <div class="card-body" style="padding-top:16px">
+      <div class="m-block" style="margin-top:0">
+        <div class="m-head mh-blue">③ CM1 = Net Sales − COGS</div>
+        <div class="m-rows">
+          <div class="m-row m-result">
+            <div class="m-name" style="color:var(--blue)">CM1 Output</div>
+            <div class="m-notes" style="color:var(--text-muted);font-size:12px">Gross Margin before logistics &amp; marketing expenses</div>
+            <div class="m-scope"><span class="stag se">E</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Operational Expenses -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">🚚</div><div class="card-ttl">Operational Expenses</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="m-block" style="margin-top:6px">
+        <div class="m-head mh-purple">④ Operational Expenses — CM2 Drivers</div>
+        <div class="m-rows" id="opexRows">
+          <div class="m-row-3 m-hdr">
+            <div class="m-name">Expense Metric</div>
+            <div>Platform</div>
+            <div>Notes</div>
+            <div></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Marketplace / Referral Fee</div>
+            <div id="ps-referral" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" id="m_referral_fee" type="text" placeholder="Amazon referral fee; TikTok platform fee…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Payment Processing Fee</div>
+            <div id="ps-payment" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" id="m_payment_fee" type="text" placeholder="Shopify / payment gateway charges…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Fulfillment – Platform Fulfilled<div style="font-size:10px;font-weight:400;color:var(--text-muted);margin-top:2px">FBA / TikTok / MCF</div></div>
+            <div id="ps-fulfill-plat" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="Platform-fulfilled fee structure…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Fulfillment – Seller Fulfilled<div style="font-size:10px;font-weight:400;color:var(--text-muted);margin-top:2px">FBM / 3PL / DTC</div></div>
+            <div id="ps-fulfill-sell" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" id="m_fulfill_rate" type="text" placeholder="3PL rate card, tiered by unit count…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Storage Fee</div>
+            <div id="ps-storage" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" id="m_storage_fee" type="text" placeholder="Amazon FBA / platform storage charges…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Inbound / Prep Cost</div>
+            <div id="ps-inbound" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="Pick & pack, transport, prep cost per unit…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div id="opexExtra"></div>
+        </div>
+        <button class="btn-add" onclick="addOpexRow()">+ Add Operational Expense</button>
+      </div>
+      <div class="m-block" style="margin-top:14px">
+        <div class="m-head mh-green">⑤ CM2 = CM1 − Operational Expenses</div>
+        <div class="m-rows">
+          <div class="m-row m-result">
+            <div class="m-name" style="color:var(--green)">CM2 Output</div>
+            <div class="m-notes" style="color:var(--text-muted);font-size:12px">Margin after fulfillment &amp; platform-related costs</div>
+            <div class="m-scope"><span class="stag se">E</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Marketing Expenses -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">📣</div><div class="card-ttl">Marketing Expenses</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="m-block" style="margin-top:6px">
+        <div class="m-head mh-orange">⑥ Marketing Expenses — CM3 Drivers</div>
+        <div class="m-rows" id="mktgRows">
+          <div class="m-row-3 m-hdr">
+            <div class="m-name">Expense Metric</div>
+            <div>Platform</div>
+            <div>Notes</div>
+            <div></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Amazon Sponsored Ads (SP/SB/SD)</div>
+            <div id="ps-amz-ads" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="SP, SB, SD — via Amazon Ads API…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">TikTok Ads</div>
+            <div id="ps-tiktok-ads" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="Via TikTok Ads API…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Meta / Google / Other Paid</div>
+            <div id="ps-meta-ads" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" type="text" placeholder="Multi-channel paid media spend…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Influencer Cost</div>
+            <div id="ps-influencer" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" id="m_influencer_val" type="text" placeholder="Creator / influencer campaign spend…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">Agency / Retainer</div>
+            <div id="ps-agency" class="plat-select-wrap"><!-- PlatSelect --></div>
+            <div><input class="cell-input" id="m_agency_val" type="text" placeholder="Agency management fees…"></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div id="mktgExtra"></div>
+        </div>
+        <button class="btn-add" onclick="addMktgRow()">+ Add Marketing Expense</button>
+      </div>
+      <div class="m-block" style="margin-top:14px">
+        <div class="m-head mh-green">⑦ CM3 = CM2 − Marketing Expenses</div>
+        <div class="m-rows">
+          <div class="m-row m-result">
+            <div class="m-name" style="color:var(--green)">CM3 Output</div>
+            <div class="m-notes" style="color:var(--text-muted);font-size:12px">Net contribution after all marketing spend</div>
+            <div class="m-scope"><span class="stag se">E</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. CM Layer Definitions (moved from Page 1) -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">📐</div><div class="card-ttl">CM Layer Definitions</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="sec-div" style="margin-top:6px">Standard Definitions</div>
+      <div class="cm-block">
+        <div class="cm-row"><span class="cm-tag t1">CM1</span><div class="cm-text">Net Sales − COGS <span>· Gross Margin before logistics &amp; marketing</span></div></div>
+        <div class="cm-row"><span class="cm-tag t2">CM2</span><div class="cm-text">CM1 − Platform Fees − Payment Fees − Fulfillment Costs <span>· Margin after operational costs</span></div></div>
+        <div class="cm-row"><span class="cm-tag t3">CM3</span><div class="cm-text">CM2 − Paid Marketing Spend <span>· Net contribution after all marketing</span></div></div>
+      </div>
+      <div class="callout" style="margin-top:12px"><span class="callout-ico">ℹ️</span><span>Net Sales = Gross Sales + Shipping Revenue − Discounts − Refunds. CM3 at <strong>product / cart / customer level</strong> is Advanced scope only.</span></div>
+      <div class="sec-div" style="margin-top:22px">Custom Layer Overrides <span style="font-weight:400;font-style:italic;text-transform:none;letter-spacing:0;color:var(--text-muted)">(optional)</span></div>
+      <div id="cmCustomList"></div>
+      <button class="btn-add" style="margin-top:6px" onclick="addCmCustom()">+ Add Custom CM Definition</button>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+    <button class="btn-fwd" onclick="nextStep()">KPI Dictionary &amp; SLA <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+</div><!-- /step-1 -->
+
+  <!-- ══════════════════════════════════════════════════
+       PAGE 3 — KPI DICTIONARY & SLA
+  ══════════════════════════════════════════════════ -->
+<div class="step-panel" id="step-2">
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">📖</div><div class="card-ttl">KPI Dictionary &amp; SLA</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="kpi-callout-pad">
+        <div class="callout" style="margin-bottom:16px">
+          <span class="callout-ico">✨</span>
+          <span>KPIs are auto-populated from your Revenue and Cost selections. All cells are editable. Use <strong>+ Add KPI Row</strong> to add metrics manually.</span>
+        </div>
+      </div>
+      <div class="kpi-scroll-wrap">
+        <table class="kpi-tbl">
+          <thead>
+            <tr>
+              <th class="kpi-name-cell">KPI</th>
+              <th class="kpi-def-cell">Definition</th>
+              <th class="kpi-src-cell">Source</th>
+              <th class="kpi-grain-cell">Grain</th>
+              <th class="kpi-sot-cell">Source of Truth<br>— Amazon</th>
+              <th class="kpi-sot-cell">Source of Truth<br>— TikTok</th>
+              <th class="kpi-sot-cell">Source of Truth<br>— Shopify</th>
+              <th class="kpi-sla-cell">SLA</th>
+              <th class="kpi-del-cell"></th>
+            </tr>
+          </thead>
+          <tbody id="kpiBody"></tbody>
+        </table>
+      </div>
+      <div class="kpi-btn-pad">
+        <button class="btn-add" onclick="addKpiRow()">+ Add KPI Row</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+    <button class="btn-fwd" onclick="nextStep()">Scope Lock <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+</div><!-- /step-2 -->
+
+<!-- ══════════════════════════════════════════════════
+     PAGE 4 — SCOPE LOCK (BRD)
+══════════════════════════════════════════════════ -->
+<div class="step-panel" id="step-3">
+
+  <!-- Automated Validation Checks -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">✅</div><div class="card-ttl">Automated Validation Checks</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body"><div id="validationOutput" style="margin-top:6px"></div></div>
+  </div>
+
+  <!-- Assumptions -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">📝</div><div class="card-ttl">Assumptions</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <table class="assump-tbl" id="assumptionsTable">
+        <thead><tr><th style="width:180px">Category</th><th>Comments</th><th style="width:40px"></th></tr></thead>
+        <tbody id="assumptionsList">
+          <tr>
+            <td><input class="ci" type="text" value="Data Access" placeholder="Category…"></td>
+            <td><textarea class="ci" placeholder="Comments…">Complete and uninterrupted access to all confirmed platforms will be provisioned prior to development to enable end-to-end data validation and QA.</textarea></td>
+            <td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>
+          </tr>
+          <tr>
+            <td><input class="ci" type="text" value="Source Data Integrity" placeholder="Category…"></td>
+            <td><textarea class="ci" placeholder="Comments…">Data sources will be maintained by the client team with consistent mappings, complete records, and no discrepancies.</textarea></td>
+            <td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn-add" onclick="addAssumption()" style="margin-top:8px">+ Add Assumption</button>
+    </div>
+  </div>
+
+  <!-- Risks -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">⚠️</div><div class="card-ttl">Risks &amp; Open Items</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <table class="risk-tbl">
+        <thead><tr><th style="width:180px">Category</th><th>Comments</th><th style="width:120px">Severity</th><th style="width:40px"></th></tr></thead>
+        <tbody id="riskList">
+          <tr>
+            <td><input class="ci" type="text" placeholder="Risk category…"></td>
+            <td><input class="ci" type="text" placeholder="Describe risk or open item…"></td>
+            <td><select class="risk-sev"><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option></select></td>
+            <td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn-add" onclick="addRisk()" style="margin-top:8px">+ Add Risk / Open Item</button>
+    </div>
+  </div>
+
+  <!-- Success Criteria -->
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">🏆</div><div class="card-ttl">Success Criteria</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <div class="success-grid">
+        <div class="success-card">
+          <div class="success-card-lbl">Reconciliation Tolerance</div>
+          <input class="ctrl" type="text" id="reconTolerance" placeholder="e.g. ≤ 1% vs source data">
+        </div>
+        <div class="success-card">
+          <div class="success-card-lbl">Refresh Reliability</div>
+          <input class="ctrl" type="text" id="refreshReliability" placeholder="e.g. 99.5% uptime, alerts on failure">
+        </div>
+        <div class="success-card">
+          <div class="success-card-lbl">Manual Reporting Reduction</div>
+          <input class="ctrl" type="text" id="manualTarget" placeholder="e.g. >90% reduction">
+        </div>
+        <div class="success-card">
+          <div class="success-card-lbl">Stakeholder Satisfaction</div>
+          <input class="ctrl" type="text" id="satTarget" placeholder="e.g. 4/5 post-deployment survey">
+        </div>
+        <div class="success-card">
+          <div class="success-card-lbl">Delivery Timeline</div>
+          <input class="ctrl" type="text" id="deliveryTimeline" placeholder="e.g. 4–6 weeks (Essentials)">
+        </div>
+        <div class="success-card">
+          <div class="success-card-lbl">Adoption Target</div>
+          <input class="ctrl" type="text" id="adoptionTarget" placeholder="e.g. All Finance team live within 4 weeks">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scope Lock -->
+  <div class="scope-lock-banner" id="scopeLockBanner">
+    <div class="scope-lock-top">
+      <div class="scope-lock-info">
+        <h3>🔒 Scope Lock</h3>
+        <p>Lock the scope to freeze all configurations and enable BRD export. Once locked, any change requests require a formal scope change process. If no approval or change request is received within 2 business days of BRD delivery, it is assumed signed off.</p>
+      </div>
+      <div class="scope-lock-toggle" id="scopeToggle" onclick="toggleScopeLock()">
+        <span class="scope-lock-toggle-ico" id="scopeIco">🔓</span>
+        <span class="scope-lock-toggle-txt" id="scopeTxt">Lock Scope</span>
+      </div>
+    </div>
+    <div class="scope-lock-status">
+      <div class="scope-dot" id="scopeDot"></div>
+      <span id="scopeStatusTxt">Scope is open — complete all sections and lock to enable export.</span>
+    </div>
+  </div>
+
+  <div class="brd-preview" id="brdPreview" style="display:none"></div>
+
+  <div class="export-section" id="exportSection">
+    <button class="btn-export locked" id="scopeExportBtn" onclick="openExportModal()" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span id="scopeExportLabel">Download BRD (.docx)</span>
+    </button>
+    <div class="export-locked-msg" id="exportLockedMsg">
+      🔒 <strong>Lock the scope above</strong> to enable BRD export.
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+    <div></div>
+  </div>
+</div><!-- /step-3 -->
+
+</div><!-- /tab-req -->
+
+<!-- OTHER TABS -->
+<div class="tab-panel" id="tab-dash">
+  <div class="placeholder-tab"><div class="pt-ico">📊</div><h3>CM Dashboard Mock</h3><p>Complete Requirement Gathering and export the BRD to unlock an auto-generated dashboard wireframe.</p></div>
+</div>
+<div class="tab-panel" id="tab-val">
+  <div class="card"><div class="card-hdr" onclick="toggleCard(this)"><div class="card-hdr-l"><div class="card-ico">✅</div><div class="card-ttl">Full Validation Report</div></div><div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="card-body"><div id="fullValidation" style="margin-top:6px"></div></div></div>
+</div>
+<div class="tab-panel" id="tab-check">
+  <div class="placeholder-tab"><div class="pt-ico">☑</div><h3>Pre-Launch Checklists</h3><p>Complete all Requirement Gathering steps to auto-generate data access, QA, and deployment checklists.</p></div>
+</div>
+<div class="tab-panel" id="tab-next">
+  <div class="placeholder-tab"><div class="pt-ico">🚀</div><h3>Next Steps &amp; Gates</h3><p>Milestone gates will appear here after scope lock.</p></div>
+</div>
+</main>
+
+</div><!-- /essential-app -->
+
+
+
+<!-- EXPORT MODAL -->
+<div class="modal-wrap" id="exportModal">
+  <div class="modal">
+    <div class="modal-ico">📄</div>
+    <h3>Export BRD Document</h3>
+    <p>Generating a professionally formatted Word document (.docx) and KPI Dictionary Excel file ready for client review and sign-off.</p>
+    <div class="modal-meta">
+      <div class="m-meta-item"><div class="m-meta-lbl">Client</div><div class="m-meta-val" id="meta-client">—</div></div>
+      <div class="m-meta-item"><div class="m-meta-lbl">Package</div><div class="m-meta-val" id="meta-pkg">Essential</div></div>
+      <div class="m-meta-item"><div class="m-meta-lbl">Date</div><div class="m-meta-val" id="meta-date">—</div></div>
+      <div class="m-meta-item"><div class="m-meta-lbl">Delivery</div><div class="m-meta-val" id="meta-bi">—</div></div>
+    </div>
+    <div class="modal-btns" style="flex-direction:column;gap:10px">
+      <button class="btn-confirm" id="exportConfirmBtn" onclick="doExport()" style="width:100%">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span id="exportConfirmLabel">Download BRD (.docx)</span>
+      </button>
+      <button class="btn-confirm" id="excelConfirmBtn" onclick="doExportExcel()" style="width:100%;background:var(--green-dark)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download KPI Dictionary (.xlsx)
+      </button>
+      <button class="btn-cancel" onclick="closeModal('exportModal')" style="width:100%">Close</button>
+    </div>
+  </div>
+</div>
+<!-- RESET MODAL -->
+<div class="modal-wrap" id="resetModal">
+  <div class="modal">
+    <div class="modal-ico" style="background:var(--red-bg);border-color:rgba(192,57,43,0.2)">🔄</div>
+    <h3>Reset All Fields?</h3>
+    <p>This will clear all data entered and restore defaults. This action cannot be undone.</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('resetModal')">Cancel</button>
+      <button class="btn-confirm danger" onclick="doReset()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset Everything
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let curStep    = 0;
+let selPkg     = null;   // 'essential' | 'advanced'
+let scopeLocked = false;
+let isDark     = false;
+
+// All platform selector instances keyed by containerId
+const platSelectors = {};
+
+// ─── KPI DEFAULT DEFINITIONS (sourced from reference file) ────
+const KPI_DEFS = {
+  'Date':           { def:'Transaction Date — Shipped Sales',                                    grain:'Date',                          src:'Amazon, TikTok Shop, Shopify', amz:'Payments Report',                                       tik:'Finance Statement Report',          sho:'Shopify Orders Report',    sla:'—' },
+  'Gross Sales':    { def:'Total Value of Units Ordered',                                         grain:'Date, Channel, Region',         src:'All Channels',                 amz:'Payments Report',                                       tik:'Finance Statement Report',          sho:'Shopify Orders Report',    sla:'T-1' },
+  'Shipping Revenue':{ def:'Shipping Fee recovered from customers',                               grain:'Date, Channel, Region',         src:'All Channels',                 amz:'Payments Report',                                       tik:'Finance Statement Report',          sho:'Shopify Orders Report',    sla:'T-1' },
+  'Giftwrap Revenue':{ def:'Giftwrap Charges recovered from customers',                           grain:'Date, Channel',                 src:'Amazon, TikTok Shop',          amz:'Payments Report',                                       tik:'Not Available',                     sho:'N/A',                      sla:'T-1' },
+  'Refunds':        { def:'Total Value of Returned Orders',                                       grain:'Date, Channel, Region',         src:'All Channels',                 amz:'Payments Report',                                       tik:'Return Refund Orders Report',       sho:'Shopify Returns Report',   sla:'T-1' },
+  'Promo / Discounts':{ def:'Total Promotional Discounts',                                        grain:'Date, Channel',                 src:'All Channels',                 amz:'Payments Report',                                       tik:'Finance Statement Report',          sho:'Shopify Orders Report',    sla:'T-1' },
+  'Net Sales':      { def:'Gross Sales − Returns − Promo / Discounts',                            grain:'Date, Channel, Region',         src:'Calculated',                   amz:'Calculated',                                            tik:'Calculated',                        sho:'Calculated',               sla:'T-1' },
+  'COGS':           { def:'Cost of Items Sold',                                                   grain:'Date, Channel, SKU',            src:'Google Sheet / ERP',           amz:'AvgCostByLocation',                                     tik:'AvgCostByLocation',                 sho:'AvgCostByLocation',        sla:'Variable' },
+  'CM1':            { def:'Net Sales − COGS',                                                     grain:'Date, Channel, Region',         src:'Calculated',                   amz:'Calculated',                                            tik:'Calculated',                        sho:'Calculated',               sla:'T-1' },
+  'Marketplace / Referral Fee': { def:'Percentage of product sale price charged by platform for facilitating the sale', grain:'Date, Channel', src:'Amazon, TikTok Shop, Shopify', amz:'Payments Report',                               tik:'Finance Statement Report',          sho:'Shopify Orders Report',    sla:'T-1' },
+  'Payment Processing Fee':    { def:'Payment gateway processing charges',                        grain:'Date, Channel',                 src:'Shopify',                      amz:'N/A',                                                   tik:'N/A',                               sho:'Shopify Payments / Gateway',sla:'T-1' },
+  'Fulfillment – Platform Fulfilled': { def:'Fulfillment & Shipping Fee for platform-fulfilled orders (FBA / TikTok / MCF)', grain:'Date, Channel', src:'Amazon, TikTok Shop', amz:'Payments Report',                                  tik:'Finance Statement Report',          sho:'Amazon MCF Data',          sla:'T-1' },
+  'Fulfillment – Seller Fulfilled':   { def:'Seller / 3PL fulfillment cost — tiered by unit count (1 unit=$7 / 2 units=$9.03 / 3 units=$12.75)', grain:'Date, Channel', src:'Fixed Cost', amz:'',                                    tik:'',                                  sho:'',                         sla:'Variable' },
+  'Storage Fee':    { def:'Amount charged by platform for storing inventory in warehouses',        grain:'Date, Channel',                 src:'Amazon, TikTok Shop',          amz:'Monthly Storage Fee Report',                            tik:'Finance Statement Report',          sho:'N/A',                      sla:'T-1' },
+  'Inbound / Prep Cost': { def:'Cost incurred for sending inventory to warehouse (pick & pack, transport, prep)', grain:'Date, Channel', src:'Fixed Cost',              amz:'',                                                      tik:'',                                  sho:'',                         sla:'Variable' },
+  'CM2':            { def:'CM1 − Fulfillment & Shipping Fee − Storage Fee − Referral Fee − Inbound Costs', grain:'Date, Channel, Region', src:'Calculated', amz:'Calculated',                                                          tik:'Calculated',                        sho:'Calculated',               sla:'T-1' },
+  'Amazon Sponsored Ads (SP/SB/SD)': { def:'Advertising Spend on Amazon Sponsored Ads',          grain:'Date, Campaign, Channel',       src:'Amazon Ads',                   amz:'Sponsored Ads Reports (Campaign Manager)',               tik:'N/A',                               sho:'N/A',                      sla:'T-1' },
+  'TikTok Ads':     { def:'Advertising Spend on TikTok',                                          grain:'Date, Campaign, Channel',       src:'TikTok Ads',                   amz:'N/A',                                                   tik:'TikTok Shop / TikTok Ads Campaign Manager', sho:'N/A',           sla:'T-1' },
+  'Meta / Google / Other Paid': { def:'Multi-channel paid media advertising spend',               grain:'Date, Campaign, Channel',       src:'Various',                      amz:'N/A',                                                   tik:'N/A',                               sho:'N/A',                      sla:'T-1' },
+  'Influencer Cost': { def:'Cost paid to creators for producing and posting sponsored content',   grain:'Date, Channel, Brand',          src:'Google Sheet',                 amz:'Google Sheet (maintained by client)',                   tik:'Google Sheet (maintained by client)',sho:'Google Sheet (maintained by client)', sla:'Variable' },
+  'Agency / Retainer': { def:'Cost Estimates for Hiring a Third-Party Agency for Campaign Optimization', grain:'Date, Channel',         src:'Fixed Cost',                   amz:'',                                                      tik:'',                                  sho:'',                         sla:'Variable' },
+  'CM3':            { def:'CM2 − Agency Cost − Influencer Cost − Ad Spend',                       grain:'Date, Channel, Region',         src:'Calculated',                   amz:'Calculated',                                            tik:'Calculated',                        sho:'Calculated',               sla:'T-1' },
+};
+
+// ═══════════════════════════════════════════════
+// PACKAGE SELECTION
+// ═══════════════════════════════════════════════
+function selectPackage(pkg) {
+  selPkg = pkg;
+  document.getElementById('pkg-selector').style.display = 'none';
+  if (pkg === 'advanced') {
+    document.getElementById('adv-placeholder').style.display = 'block';
+  } else {
+    document.getElementById('essential-app').style.display  = 'block';
+    initEssential();
+  }
+}
+
+function showPkgSelector() {
+  document.getElementById('adv-placeholder').style.display  = 'none';
+  document.getElementById('essential-app').style.display    = 'none';
+  document.getElementById('pkg-selector').style.display     = 'flex';
+}
+
+// ═══════════════════════════════════════════════
+// INIT ESSENTIAL FLOW
+// ═══════════════════════════════════════════════
+function initEssential() {
+  document.getElementById('brdDate').value = new Date().toISOString().split('T')[0];
+  updateShopifyStores();
+  initAllPlatSelectors();
+  buildKpiTable();
+  syncProgress();
+  runValidation('validationOutput');
+}
+
+// ═══════════════════════════════════════════════
+// PLATFORM MULTI-SELECT WIDGET — FIXED
+// Options: All Channels | Amazon | Shopify | TikTok
+// Rule: if all 3 individually selected → auto-collapse to "All Channels"
+// ═══════════════════════════════════════════════
+const PLATFORMS = ['Amazon', 'Shopify', 'TikTok'];
+
+// Reposition any open fixed dropdown on scroll or resize
+function repositionOpenDropdowns() {
+  document.querySelectorAll('.plat-dropdown.open').forEach(dd => {
+    const disp = dd.previousElementSibling;
+    if (!disp) return;
+    const rect = disp.getBoundingClientRect();
+    dd.style.top   = (rect.bottom + 3) + 'px';
+    dd.style.left  = rect.left + 'px';
+    dd.style.width = rect.width + 'px';
+  });
+}
+window.addEventListener('scroll', repositionOpenDropdowns, true);
+window.addEventListener('resize', repositionOpenDropdowns);
+
+function initPlatSelector(containerId, defaultAll = true) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+
+  const state = { selected: [], allChannels: defaultAll };
+  platSelectors[containerId] = state;
+
+  // Build HTML — note: NO onclick on wrapper; events attached via addEventListener below
+  el.innerHTML = `
+    <div class="plat-select-display" id="${containerId}-disp">
+      <span class="plat-ph" id="${containerId}-ph">All Channels</span>
+    </div>
+    <div class="plat-dropdown" id="${containerId}-dd">
+      <div class="plat-option plat-all-opt ${defaultAll ? 'selected' : ''}" id="${containerId}-all-opt">
+        <input type="checkbox" ${defaultAll ? 'checked' : ''} id="${containerId}-all-cb" readonly> All Channels
+      </div>
+      ${PLATFORMS.map(p => `
+      <div class="plat-option" id="${containerId}-opt-${p}">
+        <input type="checkbox" id="${containerId}-cb-${p}" readonly> ${p}
+      </div>`).join('')}
+    </div>`;
+
+  // Attach display click → toggle dropdown
+  const disp = document.getElementById(containerId + '-disp');
+  const dd   = document.getElementById(containerId + '-dd');
+
+  disp.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const isOpen = dd.classList.contains('open');
+    // Close all other open dropdowns
+    document.querySelectorAll('.plat-dropdown.open').forEach(other => {
+      if (other !== dd) {
+        other.classList.remove('open');
+        other.previousElementSibling?.classList.remove('open');
+      }
+    });
+    if (!isOpen) {
+      // Use getBoundingClientRect so position:fixed dropdown aligns correctly
+      // even when parent has overflow:hidden
+      const rect = disp.getBoundingClientRect();
+      dd.style.top   = (rect.bottom + 3) + 'px';
+      dd.style.left  = rect.left + 'px';
+      dd.style.width = rect.width + 'px';
+    }
+    dd.classList.toggle('open', !isOpen);
+    disp.classList.toggle('open', !isOpen);
+  });
+
+  // All Channels option click
+  document.getElementById(containerId + '-all-opt').addEventListener('click', function(e) {
+    e.stopPropagation();
+    _platSelectAll(containerId);
+  });
+
+  // Individual platform option clicks
+  PLATFORMS.forEach(p => {
+    document.getElementById(containerId + '-opt-' + p).addEventListener('click', function(e) {
+      e.stopPropagation();
+      _platToggle(containerId, p);
+    });
+  });
+
+  // Dropdown stops propagation so it doesn't close when clicking inside
+  dd.addEventListener('click', function(e) { e.stopPropagation(); });
+
+  // Close on outside click
+  document.addEventListener('click', function() {
+    if (dd.classList.contains('open')) {
+      dd.classList.remove('open');
+      disp.classList.remove('open');
+    }
+  });
+
+  renderPlatDisplay(containerId);
+}
+
+function _platSelectAll(id) {
+  const state = platSelectors[id];
+  if (!state) return;
+  state.allChannels = true;
+  state.selected = [];
+  PLATFORMS.forEach(p => {
+    const cb  = document.getElementById(id + '-cb-' + p);
+    const opt = document.getElementById(id + '-opt-' + p);
+    if (cb)  cb.checked = false;
+    if (opt) opt.classList.remove('selected');
+  });
+  const allCb  = document.getElementById(id + '-all-cb');
+  const allOpt = document.getElementById(id + '-all-opt');
+  if (allCb)  allCb.checked = true;
+  if (allOpt) allOpt.classList.add('selected');
+  renderPlatDisplay(id);
+}
+
+function _platToggle(id, plat) {
+  const state = platSelectors[id];
+  if (!state) return;
+  // Uncheck All Channels
+  state.allChannels = false;
+  const allCb  = document.getElementById(id + '-all-cb');
+  const allOpt = document.getElementById(id + '-all-opt');
+  if (allCb)  allCb.checked = false;
+  if (allOpt) allOpt.classList.remove('selected');
+
+  // Toggle platform
+  const idx = state.selected.indexOf(plat);
+  if (idx >= 0) state.selected.splice(idx, 1);
+  else          state.selected.push(plat);
+
+  // If all 3 selected → auto-collapse to All Channels
+  if (state.selected.length === PLATFORMS.length) {
+    _platSelectAll(id);
+    return;
+  }
+
+  PLATFORMS.forEach(p => {
+    const cb  = document.getElementById(id + '-cb-' + p);
+    const opt = document.getElementById(id + '-opt-' + p);
+    if (cb)  cb.checked = state.selected.includes(p);
+    if (opt) opt.classList.toggle('selected', state.selected.includes(p));
+  });
+  renderPlatDisplay(id);
+}
+
+// Keep old names as aliases (called from HTML onclick attributes on tag ×)
+function togglePlatOption(id, plat, e) {
+  if (e) e.stopPropagation();
+  _platToggle(id, plat);
+}
+function selectAllPlatform(id, e) {
+  if (e) e.stopPropagation();
+  _platSelectAll(id);
+}
+
+function renderPlatDisplay(id) {
+  const state = platSelectors[id];
+  const disp  = document.getElementById(id + '-disp');
+  const ph    = document.getElementById(id + '-ph');
+  if (!state || !disp) return;
+
+  // Remove existing tags (keep the placeholder span)
+  disp.querySelectorAll('.plat-tag').forEach(t => t.remove());
+
+  if (state.allChannels || state.selected.length === 0) {
+    if (ph) { ph.textContent = 'All Channels'; ph.style.display = 'inline'; }
+    return;
+  }
+  if (ph) ph.style.display = 'none';
+  state.selected.forEach(p => {
+    const tag = document.createElement('span');
+    tag.className = 'plat-tag';
+    tag.innerHTML = `${p} <span class="plat-tag-x" data-id="${id}" data-plat="${p}">×</span>`;
+    disp.appendChild(tag);
+  });
+
+  // Attach × handlers
+  disp.querySelectorAll('.plat-tag-x').forEach(x => {
+    x.addEventListener('click', function(e) {
+      e.stopPropagation();
+      _platToggle(this.dataset.id, this.dataset.plat);
+    });
+  });
+}
+
+function getPlatValue(id) {
+  const state = platSelectors[id];
+  if (!state) return 'All Channels';
+  if (state.allChannels || state.selected.length === 0) return 'All Channels';
+  return state.selected.join(', ');
+}
+
+// Remove the old togglePlatDropdown (no longer used — events are directly attached)
+function togglePlatDropdown(id) { /* deprecated — handled by addEventListener above */ }
+
+function initAllPlatSelectors() {
+  const ids = [
+    'ps-gross-sales','ps-shipping','ps-giftwrap',
+    'ps-refunds','ps-promo',
+    'ps-referral','ps-payment','ps-fulfill-plat','ps-fulfill-sell','ps-storage','ps-inbound',
+    'ps-amz-ads','ps-tiktok-ads','ps-meta-ads','ps-influencer','ps-agency',
+  ];
+  ids.forEach(id => initPlatSelector(id, true));
+}
+
+function stopProp(e) { /* just prevents card collapse */ }
+
+// ═══════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+}
+
+// ═══════════════════════════════════════════════
+// TABS & STEPS
+// ═══════════════════════════════════════════════
+function switchTab(id, el) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'val') runValidation('fullValidation');
+}
+
+function goStep(n) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  document.querySelector(`.step-pill[data-step="${n}"]`).classList.add('active');
+  curStep = n;
+  if (n === 2) { buildKpiTable(); document.body.classList.add('kpi-active'); }
+  else         { document.body.classList.remove('kpi-active'); }
+  if (n === 3) { runValidation('validationOutput'); buildPreview(); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep() {
+  const pill = document.querySelector(`.step-pill[data-step="${curStep}"]`);
+  pill.classList.add('done');
+  pill.querySelector('.pill-num').innerHTML = '✓';
+  goStep(Math.min(curStep + 1, 3));
+}
+function prevStep() { goStep(Math.max(curStep - 1, 0)); }
+
+// ═══════════════════════════════════════════════
+// CARDS
+// ═══════════════════════════════════════════════
+function toggleCard(hdr) { hdr.closest('.card').classList.toggle('collapsed'); }
+
+// ═══════════════════════════════════════════════
+// CHANNEL EXPAND/COLLAPSE
+// ═══════════════════════════════════════════════
+function toggleChannel(ch) {
+  const row    = document.getElementById('ch-' + ch + '-row');
+  const detail = document.getElementById('ch-' + ch + '-detail');
+  if (!row || !detail) return;
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  row.classList.toggle('open', !isOpen);
+}
+
+// Ad platform remove (× button)
+function removeAdPlatform(ch) {
+  const row    = document.getElementById('ch-' + ch + '-row');
+  const detail = document.getElementById('ch-' + ch + '-detail');
+  if (row)    row.remove();
+  if (detail) detail.remove();
+}
+
+// Amazon account row
+function addAmazonRow() {
+  const c = document.getElementById('amazonAccountList');
+  const d = document.createElement('div');
+  d.className = 'amz-row';
+  d.innerHTML = `<input class="ctrl" type="text" placeholder="Account type…" style="width:140px;flex-shrink:0"><input class="ctrl" type="text" placeholder="Marketplaces e.g. US, CA" style="flex:1"><button class="btn-del" onclick="this.closest('.amz-row').remove()">×</button>`;
+  c.appendChild(d);
+}
+
+// Shopify store names
+function updateShopifyStores() {
+  const count = parseInt(document.getElementById('shopifyStoreCount')?.value || '1', 10);
+  const container = document.getElementById('shopifyStoreNames');
+  if (!container) return;
+  container.innerHTML = '';
+  for (let i = 1; i <= count; i++) {
+    const d = document.createElement('div');
+    d.className = 'field';
+    d.innerHTML = `<label>Store ${i} Name / URL</label><input class="ctrl" type="text" placeholder="e.g. mybrand.myshopify.com">`;
+    container.appendChild(d);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// CONDITIONAL BOXES
+// ═══════════════════════════════════════════════
+function toggleDeliveryOther() {
+  const sel = document.getElementById('biPlatform');
+  const box = document.getElementById('deliveryOtherBox');
+  if (box) box.classList.toggle('show', sel && sel.value === 'Other');
+}
+function toggleInboundFreight() {
+  const sel = document.getElementById('cogsInboundFreight');
+  const box = document.getElementById('inboundFreightBox');
+  if (box) box.classList.toggle('show', sel && sel.value.startsWith('No'));
+}
+
+// ═══════════════════════════════════════════════
+// HELPER: get field value
+// ═══════════════════════════════════════════════
+function g(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+// ═══════════════════════════════════════════════
+// DYNAMIC ROWS
+// ═══════════════════════════════════════════════
+function removeMetricRow(btn) {
+  const row = btn.closest('.m-row-3');
+  if (row) row.remove();
+}
+
+function makePlatRow3(metricName, psId, notePlaceholder, extraId) {
+  const d = document.createElement('div');
+  d.className = 'm-row-3';
+  d.innerHTML = `
+    <div class="m-name"><input class="cell-input" type="text" value="${metricName}" placeholder="Metric name…" style="font-weight:600"></div>
+    <div id="${psId}" class="plat-select-wrap"><!-- PlatSelect --></div>
+    <div><input class="cell-input" type="text" placeholder="${notePlaceholder}"></div>
+    <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>`;
+  return d;
+}
+
+function addRevenueRow() {
+  const c = document.getElementById('revenueExtra');
+  const id = 'ps-rev-' + Date.now();
+  const d = makePlatRow3('', id, 'Notes…', null);
+  c.appendChild(d);
+  initPlatSelector(id, true);
+}
+
+function addNetSalesRow() {
+  const c = document.getElementById('netSalesExtra');
+  const id = 'ps-ns-' + Date.now();
+  const d = makePlatRow3('', id, 'Notes…', null);
+  c.appendChild(d);
+  initPlatSelector(id, true);
+}
+
+function addOpexRow() {
+  const c = document.getElementById('opexExtra');
+  const id = 'ps-opex-' + Date.now();
+  const d = makePlatRow3('', id, 'Notes…', null);
+  c.appendChild(d);
+  initPlatSelector(id, true);
+}
+
+function addMktgRow() {
+  const c = document.getElementById('mktgExtra');
+  const id = 'ps-mktg-' + Date.now();
+  const d = makePlatRow3('', id, 'Notes…', null);
+  c.appendChild(d);
+  initPlatSelector(id, true);
+}
+
+function addCmCustom() {
+  const c = document.getElementById('cmCustomList');
+  const d = document.createElement('div');
+  d.className = 'cm-custom-row';
+  const cmOpts = ['CM1','CM2','CM3','Net Sales','COGS','OpEx','Marketing'].map(o => `<option>${o}</option>`).join('');
+  d.innerHTML = `<select class="ctrl ctrl-sel" style="width:90px;flex-shrink:0">${cmOpts}</select><input class="ctrl" type="text" placeholder="Override or custom note…"><button class="btn-del" onclick="this.closest('.cm-custom-row').remove()">×</button>`;
+  c.appendChild(d);
+}
+
+function addStakeholder() {
+  const c = document.getElementById('stakeholderList');
+  const d = document.createElement('div');
+  d.className = 'sh-row';
+  d.innerHTML = `<input class="sh-input" type="text" placeholder="Role" style="font-weight:600"><input class="sh-input" type="text" placeholder="Name(s)"><input class="sh-input" type="text" placeholder="Responsibility"><button class="btn-del" onclick="this.closest('.sh-row').remove()">×</button>`;
+  c.appendChild(d);
+}
+
+function addAssumption() {
+  const tbody = document.getElementById('assumptionsList');
+  if (!tbody) return;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><input class="ci" type="text" placeholder="Category…"></td><td><textarea class="ci" placeholder="Comments…"></textarea></td><td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>`;
+  tbody.appendChild(tr);
+}
+
+function addRisk() {
+  const tbody = document.getElementById('riskList');
+  if (!tbody) return;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><input class="ci" type="text" placeholder="Risk category…"></td><td><input class="ci" type="text" placeholder="Describe risk or open item…"></td><td><select class="risk-sev"><option>Low</option><option selected>Medium</option><option>High</option></select></td><td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>`;
+  tbody.appendChild(tr);
+}
+
+// ═══════════════════════════════════════════════
+// KPI DICTIONARY TABLE
+// ═══════════════════════════════════════════════
+function getSelectedMetrics() {
+  // Always start with Date
+  const metrics = ['Date'];
+
+  // Revenue rows (fixed + extras)
+  ['rev-gross-sales','rev-shipping','rev-giftwrap'].forEach(id => {
+    if (document.getElementById(id)) metrics.push(
+      id === 'rev-gross-sales' ? 'Gross Sales' :
+      id === 'rev-shipping'    ? 'Shipping Revenue' :
+                                 'Giftwrap Revenue'
+    );
+  });
+  document.querySelectorAll('#revenueExtra .m-row-3').forEach(row => {
+    const name = row.querySelector('.cell-input')?.value?.trim();
+    if (name) metrics.push(name);
+  });
+
+  // Net Sales deductions
+  metrics.push('Refunds', 'Promo / Discounts');
+  document.querySelectorAll('#netSalesExtra .m-row-3').forEach(row => {
+    const name = row.querySelector('.cell-input')?.value?.trim();
+    if (name) metrics.push(name);
+  });
+
+  // Net Sales + COGS + CM1
+  metrics.push('Net Sales', 'COGS', 'CM1');
+
+  // OpEx rows
+  const opexNames = [
+    'Marketplace / Referral Fee','Payment Processing Fee',
+    'Fulfillment – Platform Fulfilled','Fulfillment – Seller Fulfilled',
+    'Storage Fee','Inbound / Prep Cost',
+  ];
+  document.querySelectorAll('#opexRows .m-row-3:not(.m-hdr)').forEach((row, i) => {
+    const nameEl = row.querySelector('.m-name');
+    const name = nameEl?.childNodes[0]?.textContent?.trim() || nameEl?.querySelector('.cell-input')?.value?.trim() || opexNames[i] || '';
+    if (name && !name.includes('FBA') && !name.includes('FBM')) metrics.push(name);
+    else if (opexNames[i]) metrics.push(opexNames[i]);
+  });
+  document.querySelectorAll('#opexExtra .m-row-3').forEach(row => {
+    const name = row.querySelector('.cell-input')?.value?.trim();
+    if (name) metrics.push(name);
+  });
+
+  // CM2
+  metrics.push('CM2');
+
+  // Marketing rows
+  const mktgNames = [
+    'Amazon Sponsored Ads (SP/SB/SD)','TikTok Ads','Meta / Google / Other Paid',
+    'Influencer Cost','Agency / Retainer',
+  ];
+  document.querySelectorAll('#mktgRows .m-row-3:not(.m-hdr)').forEach((row, i) => {
+    const nameEl = row.querySelector('.m-name');
+    const name = nameEl?.childNodes[0]?.textContent?.trim() || nameEl?.querySelector('.cell-input')?.value?.trim() || mktgNames[i] || '';
+    if (name) metrics.push(name);
+  });
+  document.querySelectorAll('#mktgExtra .m-row-3').forEach(row => {
+    const name = row.querySelector('.cell-input')?.value?.trim();
+    if (name) metrics.push(name);
+  });
+
+  // CM3
+  metrics.push('CM3');
+
+  // Deduplicate
+  return [...new Set(metrics)];
+}
+
+function kpiRow(kpi, def, src, grain, amz, tik, sho, sla, locked, isCM) {
+  const tr = document.createElement('tr');
+  if (isCM) tr.classList.add('kpi-cm-row');
+
+  const kpiCell = locked
+    ? `<td class="kpi-name-cell"><span class="kci kci-bold" style="display:block">${kpi}</span></td>`
+    : `<td class="kpi-name-cell"><input class="kci kci-bold" type="text" value="${kpi.replace(/"/g,'&quot;')}" placeholder="KPI name…"></td>`;
+
+  const esc = v => (v || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  tr.innerHTML = `
+    ${kpiCell}
+    <td class="kpi-def-cell"><textarea class="kci" placeholder="Definition…">${esc(def)}</textarea></td>
+    <td class="kpi-src-cell"><input class="kci" type="text" value="${esc(src)}" placeholder="e.g. All Channels…"></td>
+    <td class="kpi-grain-cell"><input class="kci" type="text" value="${esc(grain)}" placeholder="e.g. Date, Channel…"></td>
+    <td class="kpi-sot-cell"><textarea class="kci" placeholder="Amazon source…">${esc(amz)}</textarea></td>
+    <td class="kpi-sot-cell"><textarea class="kci" placeholder="TikTok source…">${esc(tik)}</textarea></td>
+    <td class="kpi-sot-cell"><textarea class="kci" placeholder="Shopify source…">${esc(sho)}</textarea></td>
+    <td class="kpi-sla-cell"><input class="kci" type="text" value="${esc(sla)}" placeholder="T-1…"></td>
+    <td class="kpi-del-cell"><button class="btn-del" onclick="this.closest('tr').remove()" title="Remove row">×</button></td>`;
+  return tr;
+}
+
+// Auto-grow textareas in KPI table — no scroll, no resize handle
+function autoGrowKpi() {
+  document.querySelectorAll('#kpiBody textarea.kci').forEach(ta => {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  });
+}
+
+function buildKpiTable() {
+  const tbody = document.getElementById('kpiBody');
+  if (!tbody) return;
+  const manualRows = [...tbody.querySelectorAll('tr[data-manual]')];
+  tbody.innerHTML = '';
+  const metrics = getSelectedMetrics();
+  const CM_RESULTS = ['Net Sales','CM1','CM2','CM3'];
+  metrics.forEach(m => {
+    const d      = KPI_DEFS[m] || { def:'', src:'', grain:'Date, Channel, Region', amz:'', tik:'', sho:'', sla:'T-1' };
+    const locked = ['Date','Net Sales','CM1','CM2','CM3'].includes(m);
+    const isCM   = CM_RESULTS.includes(m);
+    const tr = kpiRow(m, d.def, d.src||'', d.grain, d.amz||'', d.tik||'', d.sho||'', d.sla||'T-1', locked, isCM);
+    tbody.appendChild(tr);
+  });
+  manualRows.forEach(r => tbody.appendChild(r));
+  // Auto-grow all textareas after build
+  setTimeout(autoGrowKpi, 0);
+  // Attach auto-grow on input
+  tbody.querySelectorAll('textarea.kci').forEach(ta => {
+    ta.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    });
+  });
+}
+
+function addKpiRow() {
+  const tbody = document.getElementById('kpiBody');
+  if (!tbody) return;
+  const tr = kpiRow('', '', '', 'Date, Channel', '', '', '', 'T-1', false, false);
+  tr.setAttribute('data-manual', '1');
+  tbody.appendChild(tr);
+}
+
+// ═══════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════
+const REQ = ['clientName','projectTitle','bizProblem','projObjective'];
+function syncProgress() {
+  const filled = REQ.filter(id => !!g(id)).length;
+  const pct = Math.round((filled / REQ.length) * 100);
+  const fill = document.getElementById('progressFill');
+  const pctEl = document.getElementById('progressPct');
+  if (fill) fill.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+}
+
+// ═══════════════════════════════════════════════
+// VALIDATION (no CM Target checks)
+// ═══════════════════════════════════════════════
+function runValidation(targetId) {
+  const checks = [
+    { ok: !!g('clientName'),    label:'Client Name',      sub:'Required — Objective & Engagement' },
+    { ok: !!g('projectTitle'),  label:'Project Title',    sub:'Required — Objective & Engagement' },
+    { ok: !!g('bizProblem'),    label:'Business Problem', sub:'Required — Objective & Engagement' },
+    { ok: !!g('projObjective'), label:'Project Objective',sub:'Required — Objective & Engagement' },
+    { ok: !!g('reportingCurrency'), label:'Reporting Currency', sub:'Required — Accounting Orientation', warn: true },
+    { ok: !!g('cogsNotes') || true, label:'COGS Configuration', sub:'Recommended — COGS section', warn: true },
+  ];
+  const errors = checks.filter(c => !c.ok && !c.warn).length;
+  const warns  = checks.filter(c => !c.ok &&  c.warn).length;
+  const total  = errors + warns;
+  const badge  = document.getElementById('valBadge');
+  if (badge) { badge.style.display = total > 0 ? 'flex' : 'none'; badge.textContent = total; }
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  el.innerHTML = checks.map(c => {
+    const cls  = c.ok ? 'v-ok' : c.warn ? 'v-warn' : 'v-err';
+    const icon = c.ok ? '✅' : c.warn ? '⚠️' : '❌';
+    return `<div class="v-item ${cls}"><div class="v-ico">${icon}</div><div class="v-msg"><strong>${c.label}</strong><div class="v-sub">${c.ok ? 'Looks good' : c.sub}</div></div></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+// SCOPE LOCK
+// ═══════════════════════════════════════════════
+function toggleScopeLock() {
+  scopeLocked = !scopeLocked;
+  const toggle  = document.getElementById('scopeToggle');
+  const ico     = document.getElementById('scopeIco');
+  const txt     = document.getElementById('scopeTxt');
+  const dot     = document.getElementById('scopeDot');
+  const statusT = document.getElementById('scopeStatusTxt');
+  const preview = document.getElementById('brdPreview');
+  const expBtn  = document.getElementById('scopeExportBtn');
+  const expMsg  = document.getElementById('exportLockedMsg');
+  const hdrBtn  = document.getElementById('exportBtn');
+  if (scopeLocked) {
+    toggle.classList.add('locked'); ico.textContent = '🔒'; txt.textContent = 'Locked — Click to Unlock';
+    dot.classList.add('live');
+    statusT.textContent = 'Scope locked. Export is now enabled.';
+    expBtn.classList.remove('locked'); expBtn.disabled = false;
+    hdrBtn.classList.remove('locked'); hdrBtn.disabled = false;
+    expMsg.innerHTML = '✅ <strong>Scope is locked.</strong> Download the BRD document below.';
+    preview.style.display = 'block'; buildPreview();
+  } else {
+    toggle.classList.remove('locked'); ico.textContent = '🔓'; txt.textContent = 'Lock Scope';
+    dot.classList.remove('live');
+    statusT.textContent = 'Scope is open — complete all sections and lock to enable export.';
+    expBtn.classList.add('locked'); expBtn.disabled = true;
+    hdrBtn.classList.add('locked'); hdrBtn.disabled = true;
+    expMsg.innerHTML = '🔒 <strong>Lock the scope above</strong> to enable BRD export.';
+    preview.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// BRD PREVIEW
+// ═══════════════════════════════════════════════
+function buildPreview() {
+  const el = document.getElementById('brdPreview');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="brd-head">
+      <div class="brd-head-title">${g('projectTitle') || 'CM Productization BRD'}</div>
+      <div class="brd-head-sub">Business Requirements Document · Essential Package · Saras Analytics</div>
+    </div>
+    <div class="brd-sec">
+      <h4>Engagement Details</h4>
+      <div class="brd-kv"><span class="brd-k">Client</span><span class="brd-v">${g('clientName')||'—'}</span></div>
+      <div class="brd-kv"><span class="brd-k">Prepared By</span><span class="brd-v">${g('preparedBy')||'—'}</span></div>
+      <div class="brd-kv"><span class="brd-k">Date</span><span class="brd-v">${g('brdDate')||'—'}</span></div>
+    </div>
+    <div class="brd-sec">
+      <h4>Business Problem</h4>
+      <div style="font-size:13.5px;color:var(--text-primary);line-height:1.65">${g('bizProblem')||'—'}</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function openExportModal() {
+  if (!scopeLocked) return;
+  document.getElementById('meta-client').textContent = g('clientName') || '—';
+  document.getElementById('meta-pkg').textContent    = 'Essential';
+  document.getElementById('meta-date').textContent   = g('brdDate') || new Date().toISOString().split('T')[0];
+  document.getElementById('meta-bi').textContent     = g('biPlatform') || '—';
+  openModal('exportModal');
+}
+
+document.querySelectorAll('.modal-wrap').forEach(wrap => {
+  wrap.addEventListener('click', e => { if (e.target === wrap) wrap.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════
+function doReset() {
+  document.querySelectorAll('input[type="text"],input[type="date"],textarea').forEach(el => { el.value = ''; });
+  document.querySelectorAll('select').forEach(el => { el.selectedIndex = 0; });
+  document.querySelectorAll('.cond-box').forEach(b => b.classList.remove('show'));
+  ['opexExtra','mktgExtra','cmCustomList','revenueExtra','netSalesExtra'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
+  document.querySelectorAll('.step-pill').forEach((p, i) => {
+    p.classList.remove('done','active');
+    const num = p.querySelector('.pill-num');
+    if (num) num.textContent = i + 1;
+    if (i === 0) p.classList.add('active');
+  });
+  scopeLocked = false;
+  const ids = ['scopeToggle','scopeIco','scopeTxt','scopeDot','scopeStatusTxt','brdPreview','scopeExportBtn','exportLockedMsg','exportBtn'];
+  // Reset scope lock UI
+  const tog = document.getElementById('scopeToggle');
+  if (tog) {
+    tog.classList.remove('locked');
+    document.getElementById('scopeIco').textContent = '🔓';
+    document.getElementById('scopeTxt').textContent = 'Lock Scope';
+    document.getElementById('scopeDot').classList.remove('live');
+    document.getElementById('scopeStatusTxt').textContent = 'Scope is open — complete all sections and lock to enable export.';
+    document.getElementById('scopeExportBtn').classList.add('locked');
+    document.getElementById('scopeExportBtn').disabled = true;
+    document.getElementById('exportLockedMsg').innerHTML = '🔒 <strong>Lock the scope above</strong> to enable BRD export.';
+    document.getElementById('brdPreview').style.display = 'none';
+  }
+  const hdrBtn = document.getElementById('exportBtn');
+  if (hdrBtn) { hdrBtn.classList.add('locked'); hdrBtn.disabled = true; }
+  // Rebuild platform selectors
+  initAllPlatSelectors();
+  updateShopifyStores();
+  buildKpiTable();
+  goStep(0);
+  syncProgress();
+  closeModal('resetModal');
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// KPI DATA COLLECTOR (for both Word and Excel export)
+// ══════════════════════════════════════════════════════════════
+function collectKpiRows() {
+  const rows = [];
+  document.querySelectorAll('#kpiBody tr').forEach(tr => {
+    const cells = [...tr.querySelectorAll('input.kci, textarea.kci, span.kci-bold')];
+    if (cells.length >= 7) {
+      rows.push({
+        kpi:   cells[0]?.value || cells[0]?.textContent || '',
+        def:   cells[1]?.value || '',
+        src:   cells[2]?.value || '',
+        grain: cells[3]?.value || '',
+        amz:   cells[4]?.value || '',
+        tik:   cells[5]?.value || '',
+        sho:   cells[6]?.value || '',
+        sla:   cells[7]?.value || '',
+      });
+    }
+  });
+  return rows;
+}
+
+// ══════════════════════════════════════════════════════════════
+// EXCEL EXPORT — KPI Dictionary
+// Uses SheetJS (loaded inline as small CDN lib)
+// ══════════════════════════════════════════════════════════════
+async function doExportExcel() {
+  const btn = document.getElementById('excelConfirmBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+
+  try {
+    // Load SheetJS on demand
+    if (!window.XLSX) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+        s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    const rows   = collectKpiRows();
+    const client = g('clientName') || 'Client';
+    const date   = g('brdDate')    || new Date().toISOString().split('T')[0];
+
+    // Build worksheet data
+    const headers = ['KPI','Definition','Source','Grain','Source of Truth — Amazon','Source of Truth — TikTok','Source of Truth — Shopify','SLA'];
+    const data    = [headers, ...rows.map(r => [r.kpi, r.def, r.src, r.grain, r.amz, r.tik, r.sho, r.sla])];
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+
+    // Column widths
+    ws['!cols'] = [
+      { wch: 32 }, { wch: 45 }, { wch: 22 },
+      { wch: 28 }, { wch: 32 }, { wch: 32 }, { wch: 32 }, { wch: 10 },
+    ];
+
+    // Style header row bold (SheetJS CE doesn't have full styling, this is basic)
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for (let c = range.s.c; c <= range.e.c; c++) {
+      const cell = ws[XLSX.utils.encode_cell({ r: 0, c })];
+      if (cell) cell.s = { font: { bold: true } };
+    }
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'KPI Dictionary');
+
+    const safe = client.replace(/[^a-zA-Z0-9]/g, '_');
+    XLSX.writeFile(wb, `KPI_Dictionary_${safe}_${date}.xlsx`);
+
+    if (btn) { btn.disabled = false; btn.textContent = '✓ Downloaded!'; setTimeout(() => { btn.textContent = 'Download KPI Excel'; }, 2000); }
+
+  } catch(err) {
+    console.error('Excel export error:', err);
+    if (btn) { btn.disabled = false; btn.textContent = '❌ Export Failed'; }
+    alert('Excel export failed: ' + err.message);
+  }
+}
+
+
+// BRD structure: 11 sections, no KPI/Mockup, clean formatting
+// ══════════════════════════════════════════════════════════════
+
+// ── Collect all form data ─────────────────────────────────────
+function collectBRDData() {
+  const pkgMap = { essentials: 'Essentials', advanced: 'Advanced', both: 'Essentials + Advanced' };
+
+  // Helper: read text from fixed-val div (non-input display fields)
+  const gFixed = id => {
+    const el = document.getElementById(id);
+    if (el) return el.value?.trim() || '';
+    // Fixed-val divs — find by label proximity
+    return '';
+  };
+  // Read fixed-val display text by searching for known labels
+  const getFixedVal = labelText => {
+    const labels = document.querySelectorAll('#step-0 label');
+    for (const lbl of labels) {
+      if (lbl.textContent.trim().startsWith(labelText)) {
+        const fv = lbl.nextElementSibling;
+        if (fv && fv.classList.contains('fixed-val')) return fv.textContent.trim();
+      }
+    }
+    return '—';
+  };
+
+  // Stakeholders
+  const stakeholders = [];
+  document.querySelectorAll('#stakeholderList .sh-row').forEach(row => {
+    const inputs = row.querySelectorAll('input.sh-input');
+    if (inputs[0]?.value) stakeholders.push({
+      role: inputs[0].value.trim(),
+      names: inputs[1]?.value.trim() || '',
+      responsibility: inputs[2]?.value.trim() || ''
+    });
+  });
+
+  // Assumptions (from <table> rows)
+  const assumptions = [];
+  document.querySelectorAll('#assumptionsList tr').forEach(row => {
+    const inputs = row.querySelectorAll('input.ci, textarea.ci');
+    const area = inputs[0]?.value.trim() || '';
+    const text = inputs[1]?.value.trim() || '';
+    if (area || text) assumptions.push({ area, text });
+  });
+
+  // Risks (from <table> rows)
+  const risks = [];
+  document.querySelectorAll('#riskList tr').forEach(row => {
+    const inputs = row.querySelectorAll('input.ci');
+    const cat  = inputs[0]?.value.trim() || '';
+    const comm = inputs[1]?.value.trim() || '';
+    const level = row.querySelector('select')?.value || 'Medium';
+    if (cat || comm) risks.push({ cat, comm, level });
+  });
+
+  // Data sources — built from active channel rows in the DOM
+  const dataSources = [];
+  if (document.querySelector('#ch-amazon-row')) {
+    dataSources.push({ name:'Amazon Seller API', type:'Commerce — Sales, Returns, Fees', method:'API', latency:'T-2' });
+    if (document.querySelector('#ch-amzads-row'))
+      dataSources.push({ name:'Amazon Ads API', type:'Advertising — SP, SB, SD', method:'API', latency:'T-1' });
+  }
+  if (document.querySelector('#ch-shopify-row'))
+    dataSources.push({ name:'Shopify API', type:'Commerce — Sales, Returns, Fees', method:'API', latency:'T-1' });
+  if (document.querySelector('#ch-tiktok-row')) {
+    dataSources.push({ name:'TikTok Shop API', type:'Commerce — Sales, Returns, Fees', method:'API', latency:'T-1' });
+    if (document.querySelector('#ch-tiktokads-row'))
+      dataSources.push({ name:'TikTok Ads API', type:'Advertising — Ad Spend', method:'API', latency:'T-1' });
+  }
+  if (document.querySelector('#ch-googleads-row'))
+    dataSources.push({ name:'Google Ads API', type:'Advertising', method:'Daton', latency:'T-1' });
+  if (document.querySelector('#ch-metaads-row'))
+    dataSources.push({ name:'Meta Ads API', type:'Advertising', method:'Daton', latency:'T-1' });
+  if (document.querySelector('#ch-msads-row'))
+    dataSources.push({ name:'Microsoft Ads', type:'Advertising', method:'Daton', latency:'T-1' });
+  if (document.querySelector('#ch-snapads-row'))
+    dataSources.push({ name:'Snapchat Ads', type:'Advertising', method:'API', latency:'T-1' });
+  if (document.querySelector('#ch-pintads-row'))
+    dataSources.push({ name:'Pinterest Ads', type:'Advertising', method:'Daton', latency:'T-1' });
+  if (document.querySelector('#ch-applovin-row'))
+    dataSources.push({ name:'Applovin', type:'Advertising', method:'API', latency:'T-1' });
+  // COGS source always Google Sheet per config
+  const cogsFreq = document.getElementById('cogsFrequency')?.value || 'Monthly';
+  dataSources.push({ name:'Google Sheets', type:`COGS & Cost Inputs — updated ${cogsFreq}`, method:'GSheet', latency:'Manual' });
+
+  // Custom CM definitions
+  const cmCustom = [];
+  document.querySelectorAll('#cmCustomList .cm-custom-row').forEach(row => {
+    const label = row.querySelector('select')?.value || '';
+    const note  = row.querySelector('input[type="text"]')?.value.trim() || '';
+    if (note) cmCustom.push({ label, note });
+  });
+
+  // Active channels — only those whose rows still exist (× removes them)
+  const activeChannels = [];
+  if (document.querySelector('#ch-amazon-row'))  activeChannels.push('Amazon');
+  if (document.querySelector('#ch-shopify-row')) activeChannels.push('Shopify DTC');
+  if (document.querySelector('#ch-tiktok-row'))  activeChannels.push('TikTok Shop');
+
+  // Active ad platforms — only those whose rows still exist
+  const adPlatforms = [];
+  const adPlatMap = {
+    'amzads':'Amazon Ads (SP,SB,SD)','tiktokads':'TikTok Ads','googleads':'Google Ads',
+    'metaads':'Meta Ads','msads':'Microsoft Ads','snapads':'Snapchat','pintads':'Pinterest','applovin':'Applovin'
+  };
+  Object.entries(adPlatMap).forEach(([id, name]) => {
+    if (document.querySelector(`#ch-${id}-row`)) adPlatforms.push(name);
+  });
+
+  // Key decisions — fixed list in v6
+  const keyDecisions = ['Daily CM Analysis','New vs Returning Customer','Channel-wise CM','Geo-wise CM'];
+  const keyDecisionCustom = g('keyDecisionsCustom');
+  if (keyDecisionCustom) keyDecisions.push(keyDecisionCustom);
+
+  // Primary users — from stakeholder table first column
+  const primaryUsers = [];
+  document.querySelectorAll('#stakeholderList .sh-row input.sh-input').forEach((el, i) => {
+    if (i % 4 === 0 && el.value.trim()) primaryUsers.push(el.value.trim());
+  });
+
+  // Revenue metrics — read from actual page-2 rows
+  const revenueMetrics = [];
+  document.querySelectorAll('#revenueRows .m-row-3:not(.m-hdr)').forEach(row => {
+    const nameEl = row.querySelector('.m-name');
+    const name = nameEl?.textContent?.trim() || nameEl?.querySelector('input')?.value?.trim() || '';
+    const plat = getPlatValue(row.querySelector('.plat-select-wrap')?.id || '');
+    const note = row.querySelector('input.cell-input')?.value?.trim() || '';
+    if (name) revenueMetrics.push({ name, plat, note });
+  });
+  document.querySelectorAll('#revenueExtra .m-row-3').forEach(row => {
+    const name = row.querySelector('input.cell-input')?.value?.trim() || '';
+    const plat = getPlatValue(row.querySelector('.plat-select-wrap')?.id || '');
+    const inputs = row.querySelectorAll('input.cell-input');
+    const note  = inputs[1]?.value?.trim() || '';
+    if (name) revenueMetrics.push({ name, plat, note });
+  });
+
+  // OpEx metrics — from operational expenses rows
+  const opexMetrics = [];
+  document.querySelectorAll('#opexRows .m-row-3:not(.m-hdr)').forEach(row => {
+    const nameEl = row.querySelector('.m-name');
+    const name = nameEl?.childNodes[0]?.textContent?.trim() || nameEl?.querySelector('input')?.value?.trim() || '';
+    const plat = getPlatValue(row.querySelector('.plat-select-wrap')?.id || '');
+    const note = row.querySelector('input.cell-input')?.value?.trim() || '';
+    if (name) opexMetrics.push({ name, plat, note });
+  });
+  document.querySelectorAll('#opexExtra .m-row-3').forEach(row => {
+    const name = row.querySelector('input.cell-input')?.value?.trim() || '';
+    const plat = getPlatValue(row.querySelector('.plat-select-wrap')?.id || '');
+    if (name) opexMetrics.push({ name, plat, note: '' });
+  });
+
+  // Marketing metrics — from marketing expenses rows
+  const mktgMetrics = [];
+  document.querySelectorAll('#mktgRows .m-row-3:not(.m-hdr)').forEach(row => {
+    const nameEl = row.querySelector('.m-name');
+    const name = nameEl?.childNodes[0]?.textContent?.trim() || nameEl?.querySelector('input')?.value?.trim() || '';
+    const plat = getPlatValue(row.querySelector('.plat-select-wrap')?.id || '');
+    const note = row.querySelector('input.cell-input')?.value?.trim() || '';
+    if (name) mktgMetrics.push({ name, plat, note });
+  });
+  document.querySelectorAll('#mktgExtra .m-row-3').forEach(row => {
+    const name = row.querySelector('input.cell-input')?.value?.trim() || '';
+    const plat = getPlatValue(row.querySelector('.plat-select-wrap')?.id || '');
+    if (name) mktgMetrics.push({ name, plat, note: '' });
+  });
+
+  // Success criteria — read from actual inputs
+  const successCriteria = [
+    { label: 'Reconciliation Tolerance',  value: g('reconTolerance') },
+    { label: 'Refresh Reliability',        value: g('refreshReliability') },
+    { label: 'Manual Reporting Reduction', value: g('manualTarget') },
+    { label: 'Stakeholder Satisfaction',   value: g('satTarget') },
+    { label: 'Delivery Timeline',          value: g('deliveryTimeline') },
+    { label: 'Adoption Target',            value: g('adoptionTarget') },
+  ].filter(s => s.value && s.value.trim() !== '');
+
+  const biPlatform = g('biPlatform') === 'Other'
+    ? (g('biPlatformOther') || 'Other')
+    : g('biPlatform') || '—';
+
+  // Amazon configuration — read from account rows
+  const amazonConfig = [];
+  document.querySelectorAll('#amazonAccountList .amz-row').forEach(row => {
+    const label = row.querySelector('.amz-row-label')?.textContent?.trim() || '';
+    const markets = row.querySelector('input')?.value?.trim() || '';
+    if (label) amazonConfig.push({ label, markets });
+  });
+
+  // Shopify configuration
+  const shopifyStores = [];
+  document.querySelectorAll('#shopifyStoreNames input').forEach(inp => {
+    if (inp.value.trim()) shopifyStores.push(inp.value.trim());
+  });
+
+  // TikTok configuration
+  const tiktokConfig = {
+    shopConfig: document.getElementById('tiktokShopConfig')?.value || '',
+    shopifyFlow: document.getElementById('tiktokShopify')?.value || '',
+    storeDetails: g('tiktokNotes'),
+  };
+
+  return {
+    clientName:    g('clientName')    || '—',
+    projectTitle:  g('projectTitle')  || '—',
+    preparedBy:    g('preparedBy')    || '—',
+    preparedFor:   g('preparedFor')   || '—',
+    brdDate:       g('brdDate')       || new Date().toISOString().split('T')[0],
+    biPlatform,
+    package:       pkgMap[selPkg] || 'Essential',
+
+    bizProblem:    g('bizProblem')    || '—',
+    projObjective: g('projObjective') || '—',
+    primaryUsers,
+    keyDecisions,
+
+    activeChannels,
+    adPlatforms,
+    amazonConfig,
+    shopifyStores,
+    tiktokConfig,
+    reportingCurrency: g('reportingCurrency') || 'USD',
+    // Fixed values — read from display divs
+    reportingDateBasis: 'Order Date',
+    fxMethod:           'Daily Exchange Rates',
+    refreshCadence:     'Daily Automated',
+    reportingCalendar:  'Standard',
+    cogsSource:         'Google Sheet',
+    cogsGranularity:    'SKU Level',
+    cogsFrequency:      document.getElementById('cogsFrequency')?.value || 'Monthly',
+
+    dataSources,
+    cmCustom,
+    revenueMetrics,
+    opexMetrics,
+    mktgMetrics,
+
+    stakeholders,
+    assumptions,
+    risks,
+    successCriteria,
+  };
+}
+
+// ── Build and download the Word document ──────────────────────
+async function doExport() {
+  const btn = document.getElementById('exportConfirmBtn');
+  const lbl = document.getElementById('exportConfirmLabel');
+
+  const oldErr = document.getElementById('exportErrBox');
+  if (oldErr) oldErr.remove();
+
+  btn.disabled = true;
+  lbl.innerHTML = '<span class="spinner"></span> Building document…';
+
+  try {
+    const _docx = window.docx;
+    if (!_docx || !_docx.Document) {
+      throw new Error('docx.js library not loaded. Please check your internet connection and reload the page.');
+    }
+
+    const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+            Header, Footer, AlignmentType, BorderStyle, WidthType, ShadingType,
+            LevelFormat, PageBreak, UnderlineType, VerticalAlign } = _docx;
+
+    const d = collectBRDData();
+
+    // ── Page constants (US Letter) ──────────────────────────
+    const PAGE_W    = 12240;
+    const PAGE_H    = 15840;
+    const MARGIN    = 1440;
+    const CONTENT_W = 9360; // PAGE_W - 2*MARGIN
+
+    // ── Colour palette ──────────────────────────────────────
+    const BLUE_HDR  = '17375E';  // dark navy — section headings & cover
+    const BLUE_TBL  = '2E75B6';  // mid-blue — table headers
+    const BLUE_LITE = 'D9E8F5';  // light blue — group header rows in metrics
+    const GRAY_ROW  = 'F2F2F2';  // alternating data row fill
+    const CM_RESULT = 'EBF3FB';  // soft blue — CM result rows (CM1/CM2/CM3)
+    const WHITE     = 'FFFFFF';
+    const BLACK     = '000000';
+    const DARK      = '1F2D3D';
+    const MID_GRAY  = '595959';
+
+    // ── Border defs ─────────────────────────────────────────
+    const bThin  = { style: BorderStyle.SINGLE, size: 4,  color: 'BFBFBF' };
+    const bNone  = { style: BorderStyle.NONE,   size: 0,  color: WHITE };
+    const allBorders = { top: bThin, bottom: bThin, left: bThin, right: bThin };
+    const CM_PAD = { top: 100, bottom: 100, left: 160, right: 160 };
+
+    // ═══════════════════════════════════════════════════
+    // HELPER: numbered section heading (bold, dark navy)
+    // ═══════════════════════════════════════════════════
+    const secH = (num, text) => new Paragraph({
+      heading: 'Heading1',
+      spacing: { before: 320, after: 120 },
+      border:  { bottom: { style: BorderStyle.SINGLE, size: 6, color: BLUE_TBL, space: 1 } },
+      children: [new TextRun({
+        text: `${num}.  ${text}`,
+        bold: true, size: 28, font: 'Calibri', color: BLUE_HDR,
+      })],
+    });
+
+    // Sub-heading — Calibri, underlined
+    const subH = text => new Paragraph({
+      spacing: { before: 160, after: 60 },
+      children: [new TextRun({
+        text, bold: true, size: 23, font: 'Calibri', color: DARK,
+        underline: { type: UnderlineType.SINGLE },
+      })],
+    });
+
+    // Body paragraph — Calibri 11pt
+    const body = (text, opts = {}) => new Paragraph({
+      spacing: { after: 100, line: 340 },
+      children: [new TextRun({
+        text: text || '—', size: 22, font: 'Calibri', color: DARK, ...opts,
+      })],
+    });
+
+    // Bold label + value inline
+    const kv = (label, value) => new Paragraph({
+      spacing: { after: 70 },
+      children: [
+        new TextRun({ text: `${label}:`, bold: true, size: 22, font: 'Calibri', color: DARK }),
+        new TextRun({ text: `\t${value || '—'}`, size: 22, font: 'Calibri', color: DARK }),
+      ],
+    });
+
+    // Spacer
+    const gap = (pts = 120) => new Paragraph({ text: '', spacing: { after: pts } });
+
+    // Page break
+    const pbr = () => new Paragraph({ children: [new PageBreak()] });
+
+    // Bullet item
+    const bullet = text => new Paragraph({
+      numbering: { reference: 'bullets', level: 0 },
+      spacing: { after: 60, line: 300 },
+      children: [new TextRun({ text: text || '—', size: 22, font: 'Calibri', color: DARK })],
+    });
+
+    // ═══════════════════════════════════════════════════
+    // HELPER: table with blue header row + alternating rows
+    // ═══════════════════════════════════════════════════
+    const makeTable = (cols, rows) => new Table({
+      width: { size: CONTENT_W, type: WidthType.DXA },
+      columnWidths: cols.map(c => c.width),
+      rows: [
+        new TableRow({
+          tableHeader: true,
+          children: cols.map(c => new TableCell({
+            width: { size: c.width, type: WidthType.DXA },
+            shading: { fill: BLUE_TBL, type: ShadingType.CLEAR },
+            borders: allBorders,
+            margins: CM_PAD,
+            children: [new Paragraph({
+              spacing: { after: 0 },
+              children: [new TextRun({
+                text: c.text, bold: true, size: 20, font: 'Calibri', color: WHITE,
+              })],
+            })],
+          })),
+        }),
+        ...rows.map((row, ri) => new TableRow({
+          children: row.map((cell, ci) => new TableCell({
+            width: { size: cols[ci]?.width || 1000, type: WidthType.DXA },
+            shading: { fill: ri % 2 === 0 ? WHITE : GRAY_ROW, type: ShadingType.CLEAR },
+            borders: allBorders,
+            margins: CM_PAD,
+            verticalAlign: VerticalAlign.TOP,
+            children: [new Paragraph({
+              spacing: { after: 0 },
+              children: [new TextRun({
+                text: String(cell || '—'),
+                bold: ci === 0,
+                size: 21, font: 'Calibri', color: DARK,
+              })],
+            })],
+          })),
+        })),
+      ],
+    });
+
+    // Simple 2-col field table (no header) — for metadata
+    const fieldTable = rows => new Table({
+      width: { size: CONTENT_W, type: WidthType.DXA },
+      columnWidths: [2800, CONTENT_W - 2800],
+      rows: rows.map(([label, value], ri) => new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 2800, type: WidthType.DXA },
+            shading: { fill: GRAY_ROW, type: ShadingType.CLEAR },
+            borders: allBorders, margins: CM_PAD,
+            children: [new Paragraph({
+              spacing: { after: 0 },
+              children: [new TextRun({ text: label, bold: true, size: 21, font: 'Calibri', color: DARK })],
+            })],
+          }),
+          new TableCell({
+            width: { size: CONTENT_W - 2800, type: WidthType.DXA },
+            shading: { fill: WHITE, type: ShadingType.CLEAR },
+            borders: allBorders, margins: CM_PAD,
+            children: [new Paragraph({
+              spacing: { after: 0 },
+              children: [new TextRun({ text: value || '—', size: 21, font: 'Calibri', color: DARK })],
+            })],
+          }),
+        ],
+      })),
+    });
+
+    // ═══════════════════════════════════════════════════
+    // HELPER: Metrics Tracked — reads from actual form selections
+    // ═══════════════════════════════════════════════════
+    const metricsTable = () => {
+      const cols = [
+        { text: 'Metric',      width: 2800 },
+        { text: 'Platform',    width: 2000 },
+        { text: 'Notes',       width: 4560 },
+      ];
+
+      const makeRow = (name, plat, note, isGroup, isCM) => {
+        if (isGroup) {
+          return new TableRow({
+            children: [new TableCell({
+              columnSpan: cols.length,
+              shading: { fill: BLUE_LITE, type: ShadingType.CLEAR },
+              borders: allBorders, margins: CM_PAD,
+              children: [new Paragraph({
+                spacing: { after: 0 },
+                children: [new TextRun({ text: name, bold: true, size: 20, font: 'Calibri', color: BLUE_HDR })],
+              })],
+            })],
+          });
+        }
+        return new TableRow({
+          children: cols.map((c, ci) => {
+            const val = ci === 0 ? name : ci === 1 ? (plat || 'All Channels') : (note || '—');
+            return new TableCell({
+              width: { size: c.width, type: WidthType.DXA },
+              shading: { fill: isCM ? CM_RESULT : WHITE, type: ShadingType.CLEAR },
+              borders: allBorders, margins: CM_PAD, verticalAlign: VerticalAlign.TOP,
+              children: [new Paragraph({
+                spacing: { after: 0 },
+                children: [new TextRun({
+                  text: String(val || '—'),
+                  bold: ci === 0 || isCM, size: 21, font: 'Calibri',
+                  color: isCM ? BLUE_TBL : DARK,
+                })],
+              })],
+            });
+          }),
+        });
+      };
+
+      const rows = [
+        makeRow('Revenue Components', '', '', true, false),
+        ...d.revenueMetrics.map(m => makeRow(m.name, m.plat, m.note, false, false)),
+        makeRow('Deductions → Net Sales & CM1', '', '', true, false),
+        makeRow('Refunds',          'All Channels', 'Refund will be attributed on Order Date', false, false),
+        makeRow('Promo / Discounts','All Channels', '', false, false),
+        makeRow('Net Sales',        'All Channels', 'Gross Sales + Shipping Revenue + Giftwrap Revenue − Promo/Discounts − Refunds', false, true),
+        makeRow('COGS',             'All Channels', `Source: ${d.cogsSource} (${d.cogsGranularity}) — updated ${d.cogsFrequency}`, false, false),
+        makeRow('CM1',              'All Channels', 'Net Sales − COGS', false, true),
+        makeRow('Operational Expenses → CM2', '', '', true, false),
+        ...d.opexMetrics.map(m => makeRow(m.name, m.plat, m.note, false, false)),
+        makeRow('CM2',              'All Channels', 'CM1 − All Operational Expenses', false, true),
+        makeRow('Marketing Expenses → CM3', '', '', true, false),
+        ...d.mktgMetrics.map(m => makeRow(m.name, m.plat, m.note, false, false)),
+        makeRow('CM3',              'All Channels', 'CM2 − All Marketing Expenses', false, true),
+      ];
+
+      return new Table({
+        width: { size: CONTENT_W, type: WidthType.DXA },
+        columnWidths: cols.map(c => c.width),
+        rows: [
+          new TableRow({
+            tableHeader: true,
+            children: cols.map(c => new TableCell({
+              width: { size: c.width, type: WidthType.DXA },
+              shading: { fill: BLUE_TBL, type: ShadingType.CLEAR },
+              borders: allBorders, margins: CM_PAD,
+              children: [new Paragraph({
+                spacing: { after: 0 },
+                children: [new TextRun({ text: c.text, bold: true, size: 20, font: 'Calibri', color: WHITE })],
+              })],
+            })),
+          }),
+          ...rows,
+        ],
+      });
+    };
+
+    // ═══════════════════════════════════════════════════
+    // DOCUMENT CONTENT
+    // ═══════════════════════════════════════════════════
+    const children = [
+
+      // ── TITLE PAGE ──────────────────────────────────
+      gap(400),
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 80 },
+        children: [new TextRun({
+          text: 'Business Requirement Document',
+          bold: true, size: 52, font: 'Calibri', color: BLUE_HDR,
+        })],
+      }),
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 60 },
+        children: [new TextRun({
+          text: d.projectTitle,
+          bold: false, size: 30, font: 'Calibri', color: MID_GRAY, italics: true,
+        })],
+      }),
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 40 },
+        children: [new TextRun({
+          text: 'Prepared by Saras Analytics',
+          size: 22, font: 'Calibri', color: MID_GRAY,
+        })],
+      }),
+      gap(320),
+      new Paragraph({
+        border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: BLUE_TBL, space: 1 } },
+        spacing: { after: 360 },
+      }),
+      gap(80),
+
+      // ── SECTION 1: OBJECTIVE & ENGAGEMENT METADATA ──
+      secH(1, 'Objective & Engagement Metadata'),
+      gap(80),
+      fieldTable([
+        ['Project Title',    d.projectTitle],
+        ['Client Name',      d.clientName],
+        ['Prepared For',     d.preparedFor],
+        ['Prepared By',      d.preparedBy],
+        ['Date',             d.brdDate],
+        ['Mode of Delivery', d.biPlatform],
+        ['Package',          d.package],
+      ]),
+      gap(120),
+
+      // ── SECTION 2: KEY STAKEHOLDERS ─────────────────
+      secH(2, 'Key Stakeholders'),
+      gap(80),
+      d.stakeholders.length > 0
+        ? makeTable(
+            [
+              { text: 'Role',           width: 2600 },
+              { text: 'Name(s)',         width: 3200 },
+              { text: 'Responsibility', width: 3560 },
+            ],
+            d.stakeholders.map(s => [s.role, s.names, s.responsibility])
+          )
+        : body('No stakeholders defined.'),
+      gap(120),
+
+      // ── SECTION 3: CURRENT BUSINESS PROBLEM ─────────
+      secH(3, 'Current Business Problem'),
+      gap(80),
+      body(d.bizProblem),
+      gap(120),
+
+      // ── SECTION 4: PROJECT OBJECTIVE ────────────────
+      secH(4, 'Project Objective'),
+      gap(80),
+      body(d.projObjective),
+      gap(100),
+      ...(d.primaryUsers.length > 0 ? [
+        subH('Primary Users'),
+        ...d.primaryUsers.map(u => bullet(u)),
+        gap(80),
+      ] : []),
+      ...(d.keyDecisions.length > 0 ? [
+        subH('Key Decisions CM Will Support'),
+        ...d.keyDecisions.map(k => bullet(k)),
+        gap(80),
+      ] : []),
+      gap(40),
+
+      // ── SECTION 5: PROJECT SCOPE ─────────────────────
+      secH(5, 'Project Scope'),
+      gap(80),
+      fieldTable([
+        ['Coverage — Sales Channels', d.activeChannels.length > 0 ? d.activeChannels.join(', ') : '—'],
+        ['Ad Platforms in Scope',     d.adPlatforms.length > 0 ? d.adPlatforms.join(', ') : '—'],
+        ['Granularity',               'Platform and Brand-level daily contribution margin reporting'],
+        ['Mode of Delivery',          d.biPlatform],
+        ['Refresh Cadence',           d.refreshCadence],
+        ['Reporting Date Basis',      d.reportingDateBasis],
+        ['Reporting Calendar',        d.reportingCalendar],
+        ['Currency Standardization',  `${d.reportingCurrency} — ${d.fxMethod}`],
+        ['COGS Source',               `${d.cogsSource} — ${d.cogsGranularity} — updated ${d.cogsFrequency}`],
+      ]),
+      gap(120),
+      pbr(),
+
+      // ── SECTION 6: DATA SOURCES ──────────────────────
+      secH(6, 'Data Sources'),
+      gap(80),
+      d.dataSources.length > 0
+        ? makeTable(
+            [
+              { text: 'Source System',  width: 2800 },
+              { text: 'Data Extracted', width: 3560 },
+              { text: 'Method',         width: 1600 },
+              { text: 'Latency',        width: 1400 },
+            ],
+            d.dataSources.map(s => [s.name, s.type, s.method, s.latency])
+          )
+        : body('No data sources selected.'),
+      gap(120),
+
+      // ── SECTION 7: CM FRAMEWORK ──────────────────────
+      secH(7, 'CM Framework'),
+      gap(80),
+      subH('Standard Definitions'),
+      gap(40),
+      makeTable(
+        [
+          { text: 'CM Layer',    width: 1440 },
+          { text: 'Formula',     width: 3120 },
+          { text: 'Description', width: 4800 },
+        ],
+        [
+          ['CM1', 'Net Sales – COGS',                                      'Gross Margin before logistics and marketing expenses'],
+          ['CM2', 'CM1 – Distribution & Operational Costs',                 'Margin after fulfilment and platform-related costs'],
+          ['CM3', 'CM2 – Marketing Costs',                                  'Net Profitability after all marketing expenditures'],
+        ]
+      ),
+      gap(80),
+      body('Net Sales = Gross Sales + Shipping Revenue − Discounts − Refunds', { italics: true, color: MID_GRAY }),
+      ...(d.cmCustom.length > 0 ? [
+        gap(100),
+        subH('Custom Layer Overrides'),
+        ...d.cmCustom.map(c => kv(c.label, c.note)),
+      ] : []),
+      gap(120),
+      pbr(),
+
+      // ── SECTION 8: METRICS TRACKED ───────────────────
+      secH(8, 'Metrics Tracked'),
+      gap(80),
+      body('The following metrics are tracked across all CM layers, sourced from the Revenue and Costs configuration:', { color: MID_GRAY, italics: true }),
+      gap(80),
+      metricsTable(),
+      gap(80),
+      body('✦  Denotes a CM layer output (result) row.', { size: 19, color: MID_GRAY, italics: true }),
+      gap(120),
+      pbr(),
+
+      // ── SECTION 9: KEY ASSUMPTIONS ───────────────────
+      secH(9, 'Key Assumptions'),
+      gap(80),
+      d.assumptions.length > 0
+        ? makeTable(
+            [
+              { text: 'Category',   width: 2600 },
+              { text: 'Assumption', width: 6760 },
+            ],
+            d.assumptions.map(a => [a.area, a.text])
+          )
+        : body('No assumptions defined.'),
+      gap(120),
+
+      // ── SECTION 10: RISKS ────────────────────────────
+      secH(10, 'Risks & Open Items'),
+      gap(80),
+      d.risks.length > 0
+        ? makeTable(
+            [
+              { text: 'Category', width: 2600 },
+              { text: 'Comments', width: 5360 },
+              { text: 'Severity', width: 1400 },
+            ],
+            d.risks.map(r => [r.cat, r.comm, r.level])
+          )
+        : body('No risks or open items recorded.'),
+      gap(120),
+
+      // ── SECTION 11: SUCCESS CRITERIA ─────────────────
+      secH(11, 'Success Criteria'),
+      gap(80),
+      makeTable(
+        [
+          { text: 'Criteria',             width: 3200 },
+          { text: 'Target / Definition',  width: 6160 },
+        ],
+        d.successCriteria.map(s => [s.label, s.value])
+      ),
+      gap(120),
+      pbr(),
+
+      // ── SECTION 12: SIGN-OFF ─────────────────────────
+      secH(12, 'Scope Lock & Sign-Off'),
+      gap(80),
+      body('By signing below, you confirm that you have reviewed and approved this Business Requirements Document as the baseline for development work. If no written objection or change request is received within 2 business days of BRD delivery, this document is considered signed off.'),
+      gap(360),
+      makeTable(
+        [
+          { text: 'Party',     width: 2400 },
+          { text: 'Full Name', width: 2800 },
+          { text: 'Signature', width: 2560 },
+          { text: 'Date',      width: 1600 },
+        ],
+        [
+          ['Client Approver',      '', '', ''],
+          ['Saras Analytics Lead', d.preparedBy, '', d.brdDate],
+        ]
+      ),
+    ];
+
+    // ── Assemble Document ───────────────────────────────
+    lbl.innerHTML = '<span class="spinner"></span> Assembling…';
+
+    const doc = new Document({
+      numbering: {
+        config: [{
+          reference: 'bullets',
+          levels: [{
+            level: 0, format: LevelFormat.BULLET, text: '\u2022',
+            alignment: AlignmentType.LEFT,
+            style: { paragraph: { indent: { left: 540, hanging: 260 } } },
+          }],
+        }],
+      },
+      styles: {
+        default: { document: { run: { font: 'Calibri', size: 22, color: DARK } } },
+        paragraphStyles: [
+          {
+            id: 'Heading1', name: 'Heading 1', basedOn: 'Normal', next: 'Normal', quickFormat: true,
+            run: { font: 'Calibri', size: 28, bold: true, color: BLUE_HDR },
+            paragraph: { spacing: { before: 320, after: 120 }, outlineLevel: 0 },
+          },
+        ],
+      },
+      sections: [{
+        properties: {
+          page: {
+            size:   { width: PAGE_W, height: PAGE_H },
+            margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN },
+            // ── Box page border — black, 1.5pt (size 12 = 1.5pt in DXA eighths) ──
+            borders: {
+              pageBorderTop:    { style: BorderStyle.SINGLE, size: 12, color: BLACK, space: 24 },
+              pageBorderBottom: { style: BorderStyle.SINGLE, size: 12, color: BLACK, space: 24 },
+              pageBorderLeft:   { style: BorderStyle.SINGLE, size: 12, color: BLACK, space: 24 },
+              pageBorderRight:  { style: BorderStyle.SINGLE, size: 12, color: BLACK, space: 24 },
+            },
+          },
+        },
+        // ── Footer only — no header ──────────────────────────
+        footers: {
+          default: new Footer({
+            children: [new Paragraph({
+              alignment: AlignmentType.RIGHT,
+              spacing: { before: 80 },
+              children: [new TextRun({
+                text: `Saras Analytics  ||  Confidential ${new Date().getFullYear()}`,
+                size: 17, font: 'Calibri', color: '888888',
+              })],
+            })],
+          }),
+        },
+        children,
+      }],
+    });
+
+    // ── Pack and trigger download ───────────────────────
+    lbl.innerHTML = '<span class="spinner"></span> Packaging…';
+    const blob = await Packer.toBlob(doc);
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    const safe = d.clientName.replace(/[^a-zA-Z0-9]/g, '_');
+    a.href     = url;
+    a.download = `BRD_${safe}_${d.brdDate.replace(/[^a-zA-Z0-9]/g, '_')}.docx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    lbl.innerHTML = '✓ Downloaded!';
+    setTimeout(() => {
+      lbl.textContent = 'Download BRD (.docx)';
+      btn.disabled    = false;
+      closeModal('exportModal');
+    }, 2000);
+
+  } catch (err) {
+    console.error('Export error:', err);
+    const msg = err?.message || String(err);
+    lbl.innerHTML = '❌ ' + (msg.length < 90 ? msg : 'Export failed — see details below');
+    let box = document.getElementById('exportErrBox');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'exportErrBox';
+      box.style.cssText = 'margin-top:14px;padding:12px 14px;background:#FEF2F2;border:1px solid rgba(185,28,28,0.25);border-radius:8px;font-size:12px;color:#B91C1C;line-height:1.55;font-family:monospace;white-space:pre-wrap;word-break:break-all;max-height:140px;overflow-y:auto';
+      document.getElementById('exportConfirmBtn').closest('.modal').appendChild(box);
+    }
+    box.textContent = 'Error: ' + msg + (err?.stack ? '\n\n' + err.stack.split('\n').slice(0,5).join('\n') : '');
+    btn.disabled = false;
+  }
+}
+
+
+
+
+// RESET
+// ══════════════════════════════════════════
+function doReset() {
+  // Clear all text inputs, dates, textareas
+  document.querySelectorAll('input[type="text"],input[type="date"],textarea').forEach(el => { el.value = ''; });
+  document.querySelectorAll('select').forEach(el => { el.selectedIndex = 0; });
+
+  // Reset assumption and risk tables back to one default row each
+  const aList = document.getElementById('assumptionsList');
+  if (aList) {
+    aList.innerHTML = `
+      <tr>
+        <td><input class="ci" type="text" value="Data Access" placeholder="Category…"></td>
+        <td><textarea class="ci" placeholder="Comments…">Complete and uninterrupted access to all confirmed platforms will be provisioned prior to development.</textarea></td>
+        <td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>
+      </tr>`;
+  }
+  const rList = document.getElementById('riskList');
+  if (rList) {
+    rList.innerHTML = `
+      <tr>
+        <td><input class="ci" type="text" placeholder="Risk category…"></td>
+        <td><input class="ci" type="text" placeholder="Describe risk or open item…"></td>
+        <td><select class="risk-sev"><option>Low</option><option selected>Medium</option><option>High</option></select></td>
+        <td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>
+      </tr>`;
+  }
+
+  // Reset chips — remove all active states
+  document.querySelectorAll('.chip').forEach(el => { el.classList.remove('on','on-o'); });
+
+  // Re-apply default selected chips
+  const defaultOns = [
+    'CEO / Founder','CFO / FP&A','Growth / Marketing Lead','Operations Lead',
+    'Pricing & Discount Strategy','Channel Spend Allocation','New vs Returning Economics',
+    'Subscription vs OTP Trade-offs','Geo-level Shipping Decisions',
+    'Shopify DTC','Amazon','TikTok Shop',
+    'Meta Ads','Google Ads','TikTok Ads','Amazon SP','Amazon SB','Amazon SD',
+  ];
+  document.querySelectorAll('.chip').forEach(el => {
+    if (defaultOns.includes(el.dataset.val)) el.classList.add('on');
+  });
+
+  // Hide all conditional boxes
+  document.querySelectorAll('.cond-box').forEach(b => b.classList.remove('show'));
+
+  // Reset shopify store names back to 1
+  updateShopifyStores();
+
+  // Rebuild data sources table
+  buildDSTable();
+
+  // Clear dynamic extra rows
+  ['opexExtra','mktgExtra','cmCustomList'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
+
+  // Reset step pills back to step 1
+  document.querySelectorAll('.step-pill').forEach((p, i) => {
+    p.classList.remove('done','active');
+    const num = p.querySelector('.pill-num');
+    if (num) num.textContent = i + 1;
+    if (i === 0) p.classList.add('active');
+  });
+
+  // Reset scope lock
+  scopeLocked = false;
+  const toggleEl   = document.getElementById('scopeToggle');
+  const icoEl      = document.getElementById('scopeIco');
+  const txtEl      = document.getElementById('scopeTxt');
+  const dotEl      = document.getElementById('scopeDot');
+  const statusEl   = document.getElementById('scopeStatusTxt');
+  const previewEl  = document.getElementById('brdPreview');
+  const scopeExpEl = document.getElementById('scopeExportBtn');
+  const expMsgEl   = document.getElementById('exportLockedMsg');
+  const hdrBtnEl   = document.getElementById('exportBtn');
+
+  if (toggleEl) {
+    toggleEl.classList.remove('locked');
+    icoEl.textContent  = '🔓';
+    txtEl.textContent  = 'Lock Scope';
+    dotEl.classList.remove('live');
+    statusEl.textContent = 'Scope is open — complete all sections and lock to enable export.';
+    scopeExpEl.classList.add('locked'); scopeExpEl.disabled = true;
+    expMsgEl.innerHTML = '🔒 <strong>Lock the scope above</strong> to enable BRD export.';
+    if (previewEl) previewEl.style.display = 'none';
+  }
+
+  // Reset header export button
+  if (hdrBtnEl) { hdrBtnEl.classList.add('locked'); hdrBtnEl.disabled = true; }
+
+  // Reset package selection
+  selectPkg('essentials');
+
+  // Go back to step 0
+  goStep(0);
+  syncProgress();
+  closeModal('resetModal');
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.getElementById('brdDate').value = new Date().toISOString().split('T')[0];
+updateShopifyStores();   // initialise 1 store name field
+syncProgress();
+runValidation('validationOutput');
+
+</script>
+</body>
+</html>
