@@ -94,25 +94,36 @@
 }
 
 [data-theme="dark"] {
-  --bg:             #0B0F18;
-  --surface:        #141924;
-  --surface-2:      #1A2133;
-  --surface-3:      #202840;
-  --border:         #252E45;
-  --border-2:       #303D58;
-  --text-primary:   #E4EAF6;
-  --text-secondary: #8A9BB8;
-  --text-muted:     #4A5E7A;
-  --text-dim:       #252E45;
-  --shadow-xs:      0 1px 2px rgba(0,0,0,0.4);
-  --shadow-sm:      0 1px 4px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
-  --shadow-md:      0 4px 16px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.25);
-  --shadow-lg:      0 20px 48px rgba(0,0,0,0.65), 0 8px 16px rgba(0,0,0,0.35);
-  --input-bg:       #1A2133;
-  --input-border:   #252E45;
-  --overlay:        rgba(0,0,0,0.68);
-  --hdr-bg:         #0F1520;
-  --nav-bg:         #0F1520;
+  --bg:             #0D1117;
+  --surface:        #161B22;
+  --surface-2:      #1C2333;
+  --surface-3:      #21293B;
+  --border:         #30394F;
+  --border-2:       #3D4E6A;
+  --text-primary:   #F0F4FF;
+  --text-secondary: #B0BCDA;
+  --text-muted:     #6E82A8;
+  --text-dim:       #3A4B65;
+  --shadow-xs:      0 1px 2px rgba(0,0,0,0.5);
+  --shadow-sm:      0 2px 6px rgba(0,0,0,0.5);
+  --shadow-md:      0 4px 16px rgba(0,0,0,0.55);
+  --shadow-lg:      0 20px 48px rgba(0,0,0,0.7);
+  --input-bg:       #1C2333;
+  --input-border:   #30394F;
+  --overlay:        rgba(0,0,0,0.72);
+  --hdr-bg:         #0D1117;
+  --nav-bg:         #0D1117;
+  /* Ensure green tokens are bright enough in dark */
+  --green:          #2ECC8F;
+  --green-hover:    rgba(46,204,143,0.15);
+  --green-border:   rgba(46,204,143,0.35);
+  --green-dark:     #25A873;
+  --blue:           #5B9BF0;
+  --blue-bg:        rgba(91,155,240,0.12);
+  --blue-border:    rgba(91,155,240,0.3);
+  --orange:         #F5A623;
+  --orange-bg:      rgba(245,166,35,0.12);
+  --orange-border:  rgba(245,166,35,0.3);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -382,7 +393,7 @@ main {
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
 .step-panel { display:none; }
-.step-panel.active { display:block; animation:fadeUp 0.24s ease; }
+.step-panel.active { display:block !important; animation:fadeUp 0.24s ease; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
 /* ═══════════════════════════════════════════════════
@@ -602,7 +613,7 @@ textarea.ctrl { resize:vertical; min-height:90px; line-height:var(--lh-relaxed);
 .mh-purple { background:var(--purple-bg);  color:var(--purple); border-color:var(--purple-border);}
 .mh-orange { background:var(--orange-bg);  color:var(--orange); border-color:var(--orange-border);}
 
-.m-rows { border:1px solid var(--border); border-radius:0 0 var(--radius-sm) var(--radius-sm); overflow:hidden; }
+.m-rows { border:1px solid var(--border); border-radius:0 0 var(--radius-sm) var(--radius-sm); overflow:hidden; display:block; }
 .m-row { display:grid; grid-template-columns:200px 1fr 140px 72px; }
 .m-row.has-plat { grid-template-columns:180px 1fr 130px 130px 72px; }
 
@@ -1073,7 +1084,6 @@ textarea.ctrl { resize:vertical; min-height:90px; line-height:var(--lh-relaxed);
 
 /* ── KPI PAGE FULL WIDTH — only affects step-2 ── */
 /* Expand the card body on KPI page using negative margins to reclaim padding space */
-#step-2 .card-body { padding:20px 0 20px; }
 #step-2 .callout  { margin:0 24px 16px; }
 #step-2 .btn-add  { margin:12px 24px 0; }
 /* When body has kpi-active, widen main container */
@@ -1185,9 +1195,13 @@ body.kpi-active main { max-width:1380px; }
 .plat-tag {
   background:var(--green-hover); color:var(--green);
   border:1px solid var(--green-border);
-  padding:2px 8px 2px 10px; border-radius:12px;
+  padding:3px 10px; border-radius:12px;
   font-size:11px; font-weight:600; display:inline-flex; align-items:center; gap:4px;
-  white-space:nowrap; flex-shrink:0;
+  white-space:nowrap; flex-shrink:0; transition:all 0.15s;
+}
+.plat-tag-desel {
+  background:var(--surface-3); color:var(--text-muted);
+  border-color:var(--border); text-decoration:line-through; opacity:0.6;
 }
 .plat-tag-x {
   cursor:pointer; font-size:14px; line-height:1;
@@ -1218,7 +1232,7 @@ body.kpi-active main { max-width:1380px; }
 .plat-all-opt.selected { color:var(--green); }
 
 /* ── 3-COLUMN METRIC TABLE (Revenue, Net Sales, OpEx, Mktg) ── */
-.m-row-3 { display:grid; grid-template-columns:1.6fr 1.8fr 1fr 38px; }
+.m-row-3 { display:grid; grid-template-columns:1.8fr 1.2fr 1.8fr 38px; width:100%; }
 .m-row-3.m-hdr > * { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:var(--ls-wide); color:var(--text-muted); }
 .m-row-3:not(:last-child) { border-bottom:1px solid var(--border); }
 .m-row-3 > * { padding:9px 12px; font-size:13px; }
@@ -1277,8 +1291,7 @@ body.kpi-active main { max-width:1380px; }
 }
 
 /* ── KPI DICTIONARY TABLE — BEAUTIFUL ── */
-/* ── KPI PAGE FULL WIDTH — only affects step-2 ── */
-#step-2 .card-body { padding:0; }
+
 body.kpi-active main { max-width:1380px; }
 
 /* ── KPI DICTIONARY TABLE ── */
@@ -1363,6 +1376,259 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
 .adv-placeholder-title { font-family:var(--font-serif); font-size:var(--t-2xl); font-weight:600; color:var(--text-primary); margin-bottom:12px; }
 .adv-placeholder-body { font-family:var(--font-sans); font-size:var(--t-md); color:var(--text-muted); max-width:400px; line-height:var(--lh-relaxed); margin-bottom:28px; }
 
+
+/* ── CHANNEL CHECKBOX SELECTION ── */
+.ch-select-row { padding:11px 0; border-bottom:1px solid var(--border); }
+.ch-checkbox-label { display:flex; align-items:center; gap:10px; cursor:pointer; font-family:var(--font-sans); }
+.ch-checkbox-label input[type=checkbox] { width:16px; height:16px; accent-color:var(--green); cursor:pointer; flex-shrink:0; }
+.ch-check-name { font-size:var(--t-base); font-weight:600; color:var(--text-primary); user-select:none; }
+.channel-detail { display:none; padding:12px 0 16px 26px; border-bottom:1px solid var(--border); }
+.channel-detail.open { display:block; }
+
+/* ── HISTORIC DATA TAGS ── */
+.hist-tags { display:flex; flex-wrap:wrap; gap:7px; margin:4px 0 0; }
+.hist-tag { background:var(--surface-3); color:var(--text-secondary); border:1.5px solid var(--border); padding:5px 14px; border-radius:20px; font-family:var(--font-sans); font-size:var(--t-sm); font-weight:500; cursor:pointer; transition:all 0.15s; user-select:none; }
+.hist-tag:hover { border-color:var(--green); color:var(--green); }
+.hist-tag.active { background:var(--green-hover); color:var(--green); border-color:var(--green-border); font-weight:600; }
+
+/* ── NOTES WRAP + EYE BUTTON ── */
+.notes-wrap { display:flex; align-items:center; gap:4px; width:100%; }
+.notes-wrap .cell-input { flex:1; min-width:0; }
+.eye-btn { background:none; border:none; cursor:pointer; font-size:14px; padding:4px 5px; flex-shrink:0; opacity:0.55; transition:opacity 0.15s; line-height:1; }
+.eye-btn:hover { opacity:1; }
+
+/* ── NOTE PREVIEW MODAL ── */
+.note-modal-wrap { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:10000; align-items:center; justify-content:center; }
+.note-modal-wrap.open { display:flex; }
+.note-modal-box { background:var(--surface); border-radius:var(--radius-lg); padding:28px 30px; max-width:540px; width:94%; box-shadow:var(--shadow-lg); position:relative; }
+.note-modal-lbl { font-family:var(--font-sans); font-size:var(--t-xs); font-weight:700; text-transform:uppercase; letter-spacing:var(--ls-wide); color:var(--text-muted); margin-bottom:12px; }
+.note-modal-content { font-family:var(--font-sans); font-size:var(--t-base); color:var(--text-primary); line-height:var(--lh-relaxed); white-space:pre-wrap; word-break:break-word; max-height:280px; overflow-y:auto; }
+.note-modal-close { position:absolute; top:14px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-muted); line-height:1; }
+
+/* ── VALIDATION NAV ── */
+.v-item { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border-radius:var(--radius-sm); margin-bottom:6px; }
+.v-ok { background:rgba(26,127,90,0.06); }
+.v-warn { background:rgba(245,158,11,0.07); }
+.v-err { background:rgba(220,38,38,0.06); }
+.v-ico { font-size:16px; flex-shrink:0; margin-top:1px; }
+.v-msg { flex:1; }
+.v-msg strong { font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-primary); }
+.v-sub { font-family:var(--font-sans); font-size:var(--t-xs); color:var(--text-muted); margin-top:2px; }
+.v-nav-btn { margin-left:auto; flex-shrink:0; background:var(--blue); color:#fff; border:none; border-radius:var(--radius-xs); padding:5px 12px; font-family:var(--font-sans); font-size:var(--t-xs); font-weight:600; cursor:pointer; white-space:nowrap; }
+.v-nav-btn:hover { opacity:0.88; }
+.lock-hint { background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:12px; font-family:var(--font-sans); font-size:var(--t-sm); color:#92400e; }
+[data-theme=dark] .lock-hint { color:#fbbf24; }
+.highlight-field { outline:3px solid var(--green) !important; outline-offset:2px; animation:highlightPulse 2s ease; }
+@keyframes highlightPulse { 0%,100% { outline-color:var(--green); } 50% { outline-color:transparent; } }
+.download-btns { display:flex; gap:10px; flex-wrap:wrap; }
+.download-btns .btn-export { flex:1; min-width:200px; }
+
+/* ── APPLICABLE PLATFORM CELL ── */
+.ap-cell {
+  display:flex; align-items:center; padding:8px 12px;
+  flex-wrap:wrap; gap:5px; min-height:36px;
+}
+.ap-display { display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+
+/* ── CHANNEL CHECKBOX SELECTION ── */
+.ch-select-row {
+  padding:11px 0 11px;
+  border-bottom:1px solid var(--border);
+}
+.ch-checkbox-label {
+  display:flex; align-items:center; gap:10px; cursor:pointer;
+}
+.ch-checkbox-label input[type=checkbox] {
+  width:16px; height:16px; accent-color:var(--green);
+  cursor:pointer; flex-shrink:0;
+}
+.ch-check-name {
+  font-family:var(--font-sans); font-size:var(--t-base);
+  font-weight:600; color:var(--text-primary); user-select:none;
+}
+/* channel detail — hidden by default, .open shows it */
+.channel-detail {
+  display:none;
+  padding:14px 0 14px 26px;
+  border-bottom:1px solid var(--border);
+  animation:fadeUp 0.15s ease;
+}
+.channel-detail.open { display:block; }
+
+/* ── HISTORIC DATA TAGS ── */
+.hist-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.hist-tag {
+  background:var(--surface-3); color:var(--text-secondary);
+  border:1.5px solid var(--border); padding:5px 14px; border-radius:20px;
+  font-family:var(--font-sans); font-size:var(--t-sm); font-weight:500;
+  cursor:pointer; transition:all 0.15s; user-select:none;
+}
+.hist-tag:hover { border-color:var(--green); color:var(--green); }
+.hist-tag.active {
+  background:var(--green-hover); color:var(--green);
+  border-color:var(--green-border); font-weight:600;
+}
+
+/* ── NOTES WRAP + EYE ── */
+.notes-wrap { display:flex; align-items:center; gap:4px; width:100%; padding:0 8px; }
+.notes-wrap .cell-input { flex:1; min-width:0; }
+.eye-btn {
+  background:none; border:none; cursor:pointer; font-size:14px;
+  padding:4px 5px; flex-shrink:0; opacity:0.5; transition:opacity 0.15s;
+}
+.eye-btn:hover { opacity:1; }
+
+/* ── NOTE PREVIEW MODAL ── */
+.note-modal-wrap {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.4); z-index:10000;
+  align-items:center; justify-content:center;
+}
+.note-modal-wrap.open { display:flex; }
+.note-modal-box {
+  background:var(--surface); border-radius:var(--radius-lg);
+  padding:28px 30px; max-width:520px; width:92%;
+  box-shadow:var(--shadow-lg); position:relative;
+}
+.note-modal-lbl {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.6px; color:var(--text-muted); margin-bottom:10px;
+  font-family:var(--font-sans);
+}
+.note-modal-content {
+  font-size:var(--t-base); color:var(--text-primary);
+  line-height:var(--lh-relaxed); white-space:pre-wrap;
+  max-height:260px; overflow-y:auto; font-family:var(--font-sans);
+}
+.note-modal-close {
+  position:absolute; top:14px; right:16px; background:none; border:none;
+  font-size:20px; cursor:pointer; color:var(--text-muted); line-height:1;
+}
+
+/* ── VALIDATION ── */
+.v-item { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border-radius:var(--radius-sm); margin-bottom:6px; }
+.v-ok   { background:rgba(26,127,90,0.06); }
+.v-warn { background:rgba(245,158,11,0.07); }
+.v-err  { background:rgba(220,38,38,0.06); }
+.v-ico  { font-size:16px; flex-shrink:0; margin-top:1px; }
+.v-msg  { flex:1; min-width:0; }
+.v-msg strong { font-family:var(--font-sans); font-size:var(--t-sm); color:var(--text-primary); }
+.v-sub  { font-family:var(--font-sans); font-size:11px; color:var(--text-muted); margin-top:2px; }
+.v-nav-btn {
+  margin-left:8px; flex-shrink:0; background:var(--blue); color:#fff;
+  border:none; border-radius:var(--radius-xs); padding:5px 12px;
+  font-family:var(--font-sans); font-size:11px; font-weight:600;
+  cursor:pointer; white-space:nowrap;
+}
+.v-nav-btn:hover { opacity:0.85; }
+.lock-hint {
+  background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3);
+  border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:12px;
+  font-family:var(--font-sans); font-size:var(--t-sm); color:#92400e;
+}
+[data-theme=dark] .lock-hint { color:#fbbf24; }
+.highlight-field { outline:3px solid var(--green) !important; outline-offset:3px; }
+/* ── DARK THEME ELEMENT OVERRIDES ── */
+[data-theme=dark] .card { background:var(--surface); border-color:var(--border); }
+[data-theme=dark] .card-hdr { background:var(--surface-2); }
+[data-theme=dark] .card-ttl { color:var(--text-primary); }
+[data-theme=dark] .ctrl, [data-theme=dark] .ctrl-sel { background:var(--input-bg); border-color:var(--input-border); color:var(--text-primary); }
+[data-theme=dark] .ctrl::placeholder, [data-theme=dark] .ctrl-sel::placeholder { color:var(--text-muted); }
+[data-theme=dark] select option { background:#1C2333; color:var(--text-primary); }
+[data-theme=dark] .cell-input { color:var(--text-primary); }
+[data-theme=dark] .cell-input::placeholder { color:var(--text-muted); }
+[data-theme=dark] .m-rows { border-color:var(--border); background:var(--surface); }
+[data-theme=dark] .m-row-3 > * { background:var(--surface); }
+[data-theme=dark] .m-row-3:nth-child(even) > * { background:var(--surface-2); }
+[data-theme=dark] .m-row-3 > *:not(:last-child) { border-right-color:var(--border); }
+[data-theme=dark] .m-row-3:not(:last-child) { border-bottom-color:var(--border); }
+[data-theme=dark] .m-name { color:var(--text-primary); }
+[data-theme=dark] .m-hdr > * { color:var(--text-muted) !important; background:var(--surface-3) !important; }
+[data-theme=dark] .m-result { background:var(--surface-2) !important; }
+[data-theme=dark] .fixed-val { background:var(--surface-3); border-color:var(--border); color:var(--text-secondary); }
+[data-theme=dark] .sec-div { color:var(--text-muted); border-color:var(--border); }
+[data-theme=dark] .callout { background:rgba(91,155,240,0.1); border-color:rgba(91,155,240,0.25); color:var(--text-secondary); }
+[data-theme=dark] .net-sales-formula { background:var(--surface-2); border-color:var(--border); color:var(--text-primary); }
+[data-theme=dark] .net-sales-formula strong { color:var(--green); }
+[data-theme=dark] .cm-block { background:var(--surface-2); border-color:var(--border); }
+[data-theme=dark] .cm-row { border-color:var(--border); }
+[data-theme=dark] .cm-text { color:var(--text-secondary); }
+[data-theme=dark] .cm-text span { color:var(--text-muted); }
+[data-theme=dark] .sh-input { background:transparent; border-color:var(--border); color:var(--text-primary); }
+[data-theme=dark] .sh-input::placeholder { color:var(--text-muted); }
+[data-theme=dark] .assump-tbl th, [data-theme=dark] .risk-tbl th { background:var(--surface-3); color:var(--text-muted); border-color:var(--border); }
+[data-theme=dark] .assump-tbl td, [data-theme=dark] .risk-tbl td { border-color:var(--border); }
+[data-theme=dark] .ci { color:var(--text-primary); background:transparent; }
+[data-theme=dark] .ci::placeholder { color:var(--text-muted); }
+[data-theme=dark] .risk-sev { background:var(--surface-3); border-color:var(--border); color:var(--text-primary); }
+[data-theme=dark] .success-card { background:var(--surface-2); border-color:var(--border); }
+[data-theme=dark] .success-card-lbl { color:var(--text-muted); }
+[data-theme=dark] .default-decision-tag { background:rgba(46,204,143,0.12); color:var(--green); border-color:rgba(46,204,143,0.3); }
+[data-theme=dark] .hist-tag { background:var(--surface-3); border-color:var(--border); color:var(--text-secondary); }
+[data-theme=dark] .hist-tag.active { background:rgba(46,204,143,0.15); color:var(--green); border-color:var(--green-border); }
+[data-theme=dark] .ch-check-name { color:var(--text-primary); }
+[data-theme=dark] .channel-detail { border-color:var(--border); }
+[data-theme=dark] .plat-tag { background:rgba(46,204,143,0.15); color:var(--green); border-color:rgba(46,204,143,0.35); }
+[data-theme=dark] .plat-tag-desel { background:var(--surface-3); color:var(--text-muted); border-color:var(--border); }
+[data-theme=dark] .v-ok { background:rgba(46,204,143,0.08); }
+[data-theme=dark] .v-warn { background:rgba(245,166,35,0.1); }
+[data-theme=dark] .v-err { background:rgba(239,68,68,0.1); }
+[data-theme=dark] .v-msg strong { color:var(--text-primary); }
+[data-theme=dark] .v-sub { color:var(--text-muted); }
+[data-theme=dark] .scope-lock-banner { background:var(--surface-2); border-color:var(--border); }
+[data-theme=dark] .scope-lock-info h3 { color:var(--text-primary); }
+[data-theme=dark] .scope-lock-info p { color:var(--text-secondary); }
+[data-theme=dark] .scope-lock-toggle { background:var(--surface-3); border-color:var(--border); color:var(--text-primary); }
+[data-theme=dark] .scope-lock-toggle.locked { background:rgba(46,204,143,0.15); border-color:var(--green-border); color:var(--green); }
+[data-theme=dark] .brd-preview { background:var(--surface-2); border-color:var(--border); }
+[data-theme=dark] .brd-head { border-color:var(--border); }
+[data-theme=dark] .brd-head-title { color:var(--text-primary); }
+[data-theme=dark] .brd-k { color:var(--text-muted); }
+[data-theme=dark] .brd-v { color:var(--text-primary); }
+[data-theme=dark] .nav-tab { color:var(--text-secondary); }
+[data-theme=dark] .nav-tab.active { color:var(--green); border-bottom-color:var(--green); }
+[data-theme=dark] .nav-tab:hover { color:var(--text-primary); background:var(--surface-2); }
+[data-theme=dark] .step-pills-container { background:var(--surface-2); border-color:var(--border); }
+[data-theme=dark] .step-pill { color:var(--text-secondary); }
+[data-theme=dark] .step-pill.done { background:rgba(46,204,143,0.12); color:var(--green); }
+[data-theme=dark] .pill-num { background:var(--surface-3); color:var(--text-secondary); }
+[data-theme=dark] .step-pill.active .pill-num { background:rgba(255,255,255,0.2); color:#fff; }
+[data-theme=dark] .pill-divider { background:var(--border); }
+[data-theme=dark] .hdr-wordmark-saras { color:var(--text-primary); }
+[data-theme=dark] .hdr-wordmark-product { color:var(--text-muted); }
+[data-theme=dark] .btn-export.locked { background:var(--surface-3); color:var(--text-muted); border-color:var(--border); }
+[data-theme=dark] .modal { background:var(--surface); }
+[data-theme=dark] .modal h3 { color:var(--text-primary); }
+[data-theme=dark] .modal p { color:var(--text-secondary); }
+[data-theme=dark] .modal-ico { background:var(--surface-2); }
+[data-theme=dark] .m-meta-item { background:var(--surface-2); border-color:var(--border); }
+[data-theme=dark] .m-meta-lbl { color:var(--text-muted); }
+[data-theme=dark] .m-meta-val { color:var(--text-primary); }
+[data-theme=dark] .note-modal-box { background:var(--surface); }
+[data-theme=dark] .note-modal-lbl { color:var(--text-muted); }
+[data-theme=dark] .note-modal-content { color:var(--text-primary); }
+[data-theme=dark] .kpi-tbl thead tr { background:linear-gradient(135deg,#1a3a6e 0%,#1e4fa8 100%) !important; }
+[data-theme=dark] .kpi-tbl tbody tr:nth-child(odd) td { background:var(--surface); }
+[data-theme=dark] .kpi-tbl tbody tr:nth-child(even) td { background:var(--surface-2); }
+[data-theme=dark] .kpi-tbl td { border-color:var(--border); }
+[data-theme=dark] .kci { color:var(--text-primary); }
+[data-theme=dark] .kci::placeholder { color:var(--text-muted); }
+[data-theme=dark] .pkg-card { background:var(--surface); border-color:var(--border); }
+[data-theme=dark] .pkg-card-name { color:var(--text-primary); }
+[data-theme=dark] .pkg-card-desc { color:var(--text-secondary); }
+[data-theme=dark] .form-grid .field label { color:var(--text-secondary); }
+[data-theme=dark] .btn-add { color:var(--green); border-color:rgba(46,204,143,0.3); }
+[data-theme=dark] .btn-add:hover { background:rgba(46,204,143,0.08); }
+[data-theme=dark] .btn-del { color:#f87171; }
+[data-theme=dark] .stag.se { background:rgba(46,204,143,0.15); color:var(--green); border-color:rgba(46,204,143,0.3); }
+[data-theme=dark] .amz-row-label { color:var(--text-secondary); }
+[data-theme=dark] .ch-select-row { border-color:var(--border); }
+[data-theme=dark] .eye-btn { color:var(--text-muted); }
+[data-theme=dark] .eye-btn:hover { color:var(--text-primary); }
+[data-theme=dark] .export-locked-msg { color:var(--text-muted); }
+
+.download-btns { display:flex; gap:10px; flex-wrap:wrap; }
+.download-btns .btn-export { flex:1; min-width:180px; justify-content:center; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 </head>
@@ -1479,7 +1745,7 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
     <div class="pill-divider"></div>
     <div class="step-pill" data-step="2" onclick="goStep(2)">
       <div class="pill-num" id="pn2">3</div>
-      KPI Dictionary &amp; SLA
+      Risks &amp; Assumptions
     </div>
     <div class="pill-divider"></div>
     <div class="step-pill" data-step="3" onclick="goStep(3)">
@@ -1612,44 +1878,49 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
     </div>
     <div class="card-body">
 
-      <!-- ── SALES CHANNEL CONTAINER ── -->
-      <div class="sec-div" style="margin-top:6px">Sales Channel</div>
+      <!-- ── SALES CHANNELS ── -->
+      <div class="sec-div" style="margin-top:6px">Sales Channels</div>
+      <p style="font-size:12px;color:var(--text-muted);margin:4px 0 14px">Select channels in scope — configuration appears on selection.</p>
 
       <!-- Amazon -->
-      <div class="channel-row" id="ch-amazon-row" onclick="toggleChannel('amazon')">
-        <span class="channel-row-name">Amazon</span>
-        <span class="channel-row-chevron">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
-        </span>
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-amazon" onchange="toggleChannelCheck('amazon')" checked>
+          <span class="ch-check-name">Amazon</span>
+        </label>
       </div>
-      <div class="channel-detail" id="ch-amazon-detail">
-        <div id="amazonAccountList">
-          <div class="amz-row">
-            <span class="amz-row-label">Seller Central</span>
-            <input class="ctrl" type="text" placeholder="Marketplaces e.g. US, CA, MX" style="flex:1">
-            <button class="btn-del" onclick="this.closest('.amz-row').remove()">×</button>
+      <div class="channel-detail open" id="ch-amazon-detail">
+        <div class="field" style="margin-bottom:10px">
+          <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Account Type</label>
+          <div id="amazonAccountList">
+            <div class="amz-row">
+              <span class="amz-row-label">Seller Central</span>
+              <input class="ctrl" type="text" placeholder="Marketplaces e.g. US, CA, MX" style="flex:1">
+              <button class="btn-del" onclick="this.closest('.amz-row').remove()">×</button>
+            </div>
           </div>
-          <div class="amz-row">
-            <span class="amz-row-label">Vendor Central</span>
-            <input class="ctrl" type="text" placeholder="Marketplaces e.g. US, CA" style="flex:1">
-            <button class="btn-del" onclick="this.closest('.amz-row').remove()">×</button>
-          </div>
+          <button class="btn-add" style="margin-top:6px" onclick="addAmazonRow()">+ Add Account Row</button>
         </div>
-        <button class="btn-add" style="margin-top:8px" onclick="addAmazonRow()">+ Add Account Row</button>
-        <div class="field" style="margin-top:12px">
-          <label>Historic Data Support</label>
-          <input class="ctrl" type="text" id="amazonHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+        <div class="field">
+          <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+          <div class="hist-tags" id="hist-amazon">
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-amazon')">&lt; 1 year</span>
+            <span class="hist-tag active" onclick="selectHistTag(this,'hist-amazon')">1 year</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-amazon')">2 years</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-amazon')">4 years</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-amazon')">5 years</span>
+          </div>
         </div>
       </div>
 
       <!-- Shopify -->
-      <div class="channel-row" id="ch-shopify-row" onclick="toggleChannel('shopify')">
-        <span class="channel-row-name">Shopify</span>
-        <span class="channel-row-chevron">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
-        </span>
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-shopify" onchange="toggleChannelCheck('shopify')" checked>
+          <span class="ch-check-name">Shopify</span>
+        </label>
       </div>
-      <div class="channel-detail" id="ch-shopify-detail">
+      <div class="channel-detail open" id="ch-shopify-detail">
         <div class="form-grid" style="margin-top:0">
           <div class="field">
             <label>Number of Stores</label>
@@ -1662,21 +1933,27 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
             <select class="ctrl ctrl-sel" id="nonDtcShopify"><option value="No">No</option><option value="Yes">Yes</option></select>
           </div>
         </div>
-        <div id="shopifyStoreNames" class="store-names-list"></div>
+        <div id="shopifyStoreNames" class="store-names-list" style="margin-top:8px"></div>
         <div class="field" style="margin-top:12px">
-          <label>Historic Data Support</label>
-          <input class="ctrl" type="text" id="shopifyHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+          <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+          <div class="hist-tags" id="hist-shopify">
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-shopify')">&lt; 1 year</span>
+            <span class="hist-tag active" onclick="selectHistTag(this,'hist-shopify')">1 year</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-shopify')">2 years</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-shopify')">4 years</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-shopify')">5 years</span>
+          </div>
         </div>
       </div>
 
       <!-- TikTok -->
-      <div class="channel-row" id="ch-tiktok-row" onclick="toggleChannel('tiktok')">
-        <span class="channel-row-name">TikTok</span>
-        <span class="channel-row-chevron">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
-        </span>
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-tiktok" onchange="toggleChannelCheck('tiktok')" checked>
+          <span class="ch-check-name">TikTok</span>
+        </label>
       </div>
-      <div class="channel-detail" id="ch-tiktok-detail">
+      <div class="channel-detail open" id="ch-tiktok-detail">
         <div class="form-grid" style="margin-top:0">
           <div class="field">
             <label>Shop Configuration</label>
@@ -1690,180 +1967,206 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
             <select class="ctrl ctrl-sel" id="tiktokShopify"><option value="No">No</option><option value="Yes">Yes</option></select>
           </div>
         </div>
-        <div class="field" style="margin-top:12px">
+        <div class="field" style="margin-top:10px">
           <label>Store Details</label>
-          <input class="ctrl" type="text" id="tiktokNotes" placeholder="Single Shop / Multiple Shops — any additional configuration details…">
+          <input class="ctrl" type="text" id="tiktokNotes" placeholder="Single Shop / Multiple Shops — configuration details…">
         </div>
-        <div class="field" style="margin-top:12px">
-          <label>Historic Data Support</label>
-          <input class="ctrl" type="text" id="tiktokHistoric" placeholder="e.g. 18 months, Mar 2023 onwards…">
+        <div class="field" style="margin-top:10px">
+          <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+          <div class="hist-tags" id="hist-tiktok">
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-tiktok')">&lt; 1 year</span>
+            <span class="hist-tag active" onclick="selectHistTag(this,'hist-tiktok')">1 year</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-tiktok')">2 years</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-tiktok')">4 years</span>
+            <span class="hist-tag" onclick="selectHistTag(this,'hist-tiktok')">5 years</span>
+          </div>
         </div>
       </div>
 
-      <!-- ── AD PLATFORMS CONTAINER ── -->
+      <!-- ── AD PLATFORMS ── -->
       <div class="sec-div" style="margin-top:22px">Ad Platforms</div>
-      <div id="adPlatformList">
-        <div class="channel-row" id="ch-amzads-row" onclick="toggleChannel('amzads')">
-          <span class="channel-row-name">Amazon Ads <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(SP, SB, SD)</span></span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
-            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('amzads')" style="flex-shrink:0">×</button>
-          </div>
-        </div>
-        <div class="channel-detail" id="ch-amzads-detail">
-          <div class="form-grid" style="margin-top:0">
-            <div class="field">
-              <label>Historic Data Support</label>
-              <input class="ctrl" type="text" id="amzAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
-            </div>
-            <div class="field">
-              <label>Notes</label>
-              <input class="ctrl" type="text" id="amzAdsNotes" placeholder="Integration details, data availability notes…">
-            </div>
-          </div>
-        </div>
+      <p style="font-size:12px;color:var(--text-muted);margin:4px 0 14px">Select ad platforms in scope — unchecked platforms are excluded from Revenue &amp; Costs.</p>
 
-        <div class="channel-row" id="ch-tiktokads-row" onclick="toggleChannel('tiktokads')">
-          <span class="channel-row-name">TikTok Ads</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
-            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('tiktokads')" style="flex-shrink:0">×</button>
-          </div>
-        </div>
-        <div class="channel-detail" id="ch-tiktokads-detail">
-          <div class="form-grid" style="margin-top:0">
-            <div class="field">
-              <label>Historic Data Support</label>
-              <input class="ctrl" type="text" id="tiktokAdsHistoric" placeholder="e.g. 18 months, Mar 2023 onwards…">
+      <!-- Amazon Ads — default checked, 60 days only -->
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-amzads" onchange="toggleChannelCheck('amzads')" checked>
+          <span class="ch-check-name">Amazon Ads <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(SP, SB, SD)</span></span>
+        </label>
+      </div>
+      <div class="channel-detail open" id="ch-amzads-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+            <div class="hist-tags" id="hist-amzads">
+              <span class="hist-tag active" onclick="selectHistTag(this,'hist-amzads')">60 days</span>
             </div>
-            <div class="field">
-              <label>Notes</label>
-              <input class="ctrl" type="text" id="tiktokAdsNotes" placeholder="Integration details, data availability notes…">
-            </div>
+            <p style="font-size:11px;color:var(--text-muted);margin:6px 0 0">Amazon Ads API provides a maximum of 60 days historic data.</p>
           </div>
+          <div class="field"><label>Notes</label><input class="ctrl" type="text" id="amzAdsNotes" placeholder="Campaign types, targeting notes…"></div>
         </div>
+      </div>
 
-        <div class="channel-row" id="ch-googleads-row" onclick="toggleChannel('googleads')">
-          <span class="channel-row-name">Google Ads</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
-            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('googleads')" style="flex-shrink:0">×</button>
-          </div>
-        </div>
-        <div class="channel-detail" id="ch-googleads-detail">
-          <div class="form-grid" style="margin-top:0">
-            <div class="field">
-              <label>Historic Data Support</label>
-              <input class="ctrl" type="text" id="googleAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+      <!-- TikTok Ads -->
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-tiktokads" onchange="toggleChannelCheck('tiktokads')" checked>
+          <span class="ch-check-name">TikTok Ads</span>
+        </label>
+      </div>
+      <div class="channel-detail open" id="ch-tiktokads-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+            <div class="hist-tags" id="hist-tiktokads">
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-tiktokads')">&lt; 1 year</span>
+              <span class="hist-tag active" onclick="selectHistTag(this,'hist-tiktokads')">1 year</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-tiktokads')">2 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-tiktokads')">4 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-tiktokads')">5 years</span>
             </div>
-            <div class="field">
-              <label>Notes</label>
-              <input class="ctrl" type="text" id="googleAdsNotes" placeholder="Integration details, data availability notes…">
-            </div>
           </div>
+          <div class="field"><label>Notes</label><input class="ctrl" type="text" id="tiktokAdsNotes" placeholder="Campaign details…"></div>
         </div>
+      </div>
 
-        <div class="channel-row" id="ch-metaads-row" onclick="toggleChannel('metaads')">
-          <span class="channel-row-name">Meta Ads</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
-            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('metaads')" style="flex-shrink:0">×</button>
-          </div>
-        </div>
-        <div class="channel-detail" id="ch-metaads-detail">
-          <div class="form-grid" style="margin-top:0">
-            <div class="field">
-              <label>Historic Data Support</label>
-              <input class="ctrl" type="text" id="metaAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+      <!-- Google Ads — default unchecked -->
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-googleads" onchange="toggleChannelCheck('googleads')">
+          <span class="ch-check-name">Google Ads</span>
+        </label>
+      </div>
+      <div class="channel-detail" id="ch-googleads-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+            <div class="hist-tags" id="hist-googleads">
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-googleads')">&lt; 1 year</span>
+              <span class="hist-tag active" onclick="selectHistTag(this,'hist-googleads')">1 year</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-googleads')">2 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-googleads')">4 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-googleads')">5 years</span>
             </div>
-            <div class="field">
-              <label>Notes</label>
-              <input class="ctrl" type="text" id="metaAdsNotes" placeholder="Integration details, data availability notes…">
-            </div>
           </div>
+          <div class="field"><label>Notes</label><input class="ctrl" type="text" id="googleAdsNotes" placeholder="Campaign details…"></div>
         </div>
+      </div>
 
-        <div class="channel-row" id="ch-msads-row" onclick="toggleChannel('msads')">
-          <span class="channel-row-name">Microsoft Ads</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
-            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('msads')" style="flex-shrink:0">×</button>
-          </div>
-        </div>
-        <div class="channel-detail" id="ch-msads-detail">
-          <div class="form-grid" style="margin-top:0">
-            <div class="field">
-              <label>Historic Data Support</label>
-              <input class="ctrl" type="text" id="msAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+      <!-- Meta Ads -->
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-metaads" onchange="toggleChannelCheck('metaads')">
+          <span class="ch-check-name">Meta Ads</span>
+        </label>
+      </div>
+      <div class="channel-detail" id="ch-metaads-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+            <div class="hist-tags" id="hist-metaads">
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-metaads')">&lt; 1 year</span>
+              <span class="hist-tag active" onclick="selectHistTag(this,'hist-metaads')">1 year</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-metaads')">2 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-metaads')">4 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-metaads')">5 years</span>
             </div>
-            <div class="field">
-              <label>Notes</label>
-              <input class="ctrl" type="text" id="msAdsNotes" placeholder="Integration details, data availability notes…">
-            </div>
           </div>
+          <div class="field"><label>Notes</label><input class="ctrl" type="text" id="metaAdsNotes" placeholder="Campaign details…"></div>
         </div>
+      </div>
 
-        <div class="channel-row" id="ch-snapads-row" onclick="toggleChannel('snapads')">
-          <span class="channel-row-name">Snapchat</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
-            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('snapads')" style="flex-shrink:0">×</button>
-          </div>
-        </div>
-        <div class="channel-detail" id="ch-snapads-detail">
-          <div class="form-grid" style="margin-top:0">
-            <div class="field">
-              <label>Historic Data Support</label>
-              <input class="ctrl" type="text" id="snapAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+      <!-- Microsoft Ads -->
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-msads" onchange="toggleChannelCheck('msads')">
+          <span class="ch-check-name">Microsoft Ads</span>
+        </label>
+      </div>
+      <div class="channel-detail" id="ch-msads-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+            <div class="hist-tags" id="hist-msads">
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-msads')">&lt; 1 year</span>
+              <span class="hist-tag active" onclick="selectHistTag(this,'hist-msads')">1 year</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-msads')">2 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-msads')">4 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-msads')">5 years</span>
             </div>
-            <div class="field">
-              <label>Notes</label>
-              <input class="ctrl" type="text" id="snapAdsNotes" placeholder="Integration details, data availability notes…">
-            </div>
           </div>
+          <div class="field"><label>Notes</label><input class="ctrl" type="text" id="msAdsNotes" placeholder="Campaign details…"></div>
         </div>
+      </div>
 
-        <div class="channel-row" id="ch-pintads-row" onclick="toggleChannel('pintads')">
-          <span class="channel-row-name">Pinterest</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
-            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('pintads')" style="flex-shrink:0">×</button>
-          </div>
-        </div>
-        <div class="channel-detail" id="ch-pintads-detail">
-          <div class="form-grid" style="margin-top:0">
-            <div class="field">
-              <label>Historic Data Support</label>
-              <input class="ctrl" type="text" id="pintAdsHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+      <!-- Snapchat -->
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-snapads" onchange="toggleChannelCheck('snapads')">
+          <span class="ch-check-name">Snapchat</span>
+        </label>
+      </div>
+      <div class="channel-detail" id="ch-snapads-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+            <div class="hist-tags" id="hist-snapads">
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-snapads')">&lt; 1 year</span>
+              <span class="hist-tag active" onclick="selectHistTag(this,'hist-snapads')">1 year</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-snapads')">2 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-snapads')">4 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-snapads')">5 years</span>
             </div>
-            <div class="field">
-              <label>Notes</label>
-              <input class="ctrl" type="text" id="pintAdsNotes" placeholder="Integration details, data availability notes…">
-            </div>
           </div>
+          <div class="field"><label>Notes</label><input class="ctrl" type="text" id="snapAdsNotes" placeholder="Campaign details…"></div>
         </div>
+      </div>
 
-        <div class="channel-row" id="ch-applovin-row" onclick="toggleChannel('applovin')">
-          <span class="channel-row-name">Applovin</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="channel-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span>
-            <button class="btn-del" title="Remove platform" onclick="event.stopPropagation();removeAdPlatform('applovin')" style="flex-shrink:0">×</button>
-          </div>
-        </div>
-        <div class="channel-detail" id="ch-applovin-detail">
-          <div class="form-grid" style="margin-top:0">
-            <div class="field">
-              <label>Historic Data Support</label>
-              <input class="ctrl" type="text" id="applovinHistoric" placeholder="e.g. 24 months, Jan 2022 onwards…">
+      <!-- Pinterest -->
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-pintads" onchange="toggleChannelCheck('pintads')">
+          <span class="ch-check-name">Pinterest</span>
+        </label>
+      </div>
+      <div class="channel-detail" id="ch-pintads-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+            <div class="hist-tags" id="hist-pintads">
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-pintads')">&lt; 1 year</span>
+              <span class="hist-tag active" onclick="selectHistTag(this,'hist-pintads')">1 year</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-pintads')">2 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-pintads')">4 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-pintads')">5 years</span>
             </div>
-            <div class="field">
-              <label>Notes</label>
-              <input class="ctrl" type="text" id="applovinNotes" placeholder="Integration details, data availability notes…">
-            </div>
           </div>
+          <div class="field"><label>Notes</label><input class="ctrl" type="text" id="pintAdsNotes" placeholder="Campaign details…"></div>
         </div>
-      </div><!-- /adPlatformList -->
+      </div>
 
+      <!-- Applovin -->
+      <div class="ch-select-row">
+        <label class="ch-checkbox-label">
+          <input type="checkbox" id="chk-applovin" onchange="toggleChannelCheck('applovin')">
+          <span class="ch-check-name">Applovin</span>
+        </label>
+      </div>
+      <div class="channel-detail" id="ch-applovin-detail">
+        <div class="form-grid" style="margin-top:0">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Historic Data Support</label>
+            <div class="hist-tags" id="hist-applovin">
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-applovin')">&lt; 1 year</span>
+              <span class="hist-tag active" onclick="selectHistTag(this,'hist-applovin')">1 year</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-applovin')">2 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-applovin')">4 years</span>
+              <span class="hist-tag" onclick="selectHistTag(this,'hist-applovin')">5 years</span>
+            </div>
+          </div>
+          <div class="field"><label>Notes</label><input class="ctrl" type="text" id="applovinNotes" placeholder="Campaign details…"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1890,26 +2193,26 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
         <div class="m-rows" id="revenueRows">
           <div class="m-row-3 m-hdr">
             <div class="m-name">Revenue Metric</div>
-            <div>Platform</div>
+            <div>Applicable Platforms</div>
             <div>Notes</div>
             <div></div>
           </div>
           <div class="m-row-3" id="rev-gross-sales">
             <div class="m-name">Gross Sales</div>
-            <div id="ps-gross-sales" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="Total order value before deductions…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-gross-sales" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="Total order value before deductions…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3" id="rev-shipping">
             <div class="m-name">Shipping Revenue</div>
-            <div id="ps-shipping" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="Shipping charges collected from customers…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-shipping" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="Shipping charges collected from customers…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3" id="rev-giftwrap">
             <div class="m-name">Giftwrap Revenue</div>
-            <div id="ps-giftwrap" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="Gift wrap fees charged to buyers…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-giftwrap" data-ap-rule="amazon-only"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="Gift wrap fees charged to buyers…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div id="revenueExtra"></div>
@@ -1931,20 +2234,20 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
         <div class="m-rows" id="netSalesRows">
           <div class="m-row-3 m-hdr">
             <div class="m-name">Metric</div>
-            <div>Platform</div>
+            <div>Applicable Platforms</div>
             <div>Notes</div>
             <div></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Refunds</div>
-            <div id="ps-refunds" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" value="Refund will be attributed on Order Date"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-refunds" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" value="Refund will be attributed on Order Date"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Promo / Discounts</div>
-            <div id="ps-promo" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="Order-level discounts deducted from Gross Sales…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-promo" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="Order-level discounts deducted from Gross Sales…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div id="netSalesExtra"></div>
@@ -2026,44 +2329,59 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
         <div class="m-rows" id="opexRows">
           <div class="m-row-3 m-hdr">
             <div class="m-name">Expense Metric</div>
-            <div>Platform</div>
+            <div>Applicable Platforms</div>
             <div>Notes</div>
             <div></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Marketplace / Referral Fee</div>
-            <div id="ps-referral" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" id="m_referral_fee" type="text" placeholder="Amazon referral fee; TikTok platform fee…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-referral" data-ap-rule="amazon-tiktok"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div>
+              <div class="notes-wrap">
+                <input class="cell-input" id="m_referral_fee" type="text" value="For Shopify, add 2.5% of revenue as Referral Fee">
+                <button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button>
+              </div>
+            </div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Payment Processing Fee</div>
-            <div id="ps-payment" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" id="m_payment_fee" type="text" placeholder="Shopify / payment gateway charges…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-payment" data-ap-rule="shopify-stripe"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div>
+              <div class="notes-wrap">
+                <input class="cell-input" id="m_payment_fee" type="text" placeholder="Shopify / payment gateway charges…">
+                <button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button>
+              </div>
+            </div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Fulfillment – Platform Fulfilled<div style="font-size:10px;font-weight:400;color:var(--text-muted);margin-top:2px">FBA / TikTok / MCF</div></div>
-            <div id="ps-fulfill-plat" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="Platform-fulfilled fee structure…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-fulfill-plat" data-ap-rule="amazon-tiktok"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div>
+              <div class="notes-wrap">
+                <input class="cell-input" type="text" placeholder="Platform-fulfilled fee structure…">
+                <button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button>
+              </div>
+            </div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Fulfillment – Seller Fulfilled<div style="font-size:10px;font-weight:400;color:var(--text-muted);margin-top:2px">FBM / 3PL / DTC</div></div>
-            <div id="ps-fulfill-sell" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" id="m_fulfill_rate" type="text" placeholder="3PL rate card, tiered by unit count…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-fulfill-sell" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" id="m_fulfill_rate" type="text" placeholder="3PL rate card, tiered by unit count…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Storage Fee</div>
-            <div id="ps-storage" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" id="m_storage_fee" type="text" placeholder="Amazon FBA / platform storage charges…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-storage" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" id="m_storage_fee" type="text" placeholder="Amazon FBA / platform storage charges…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Inbound / Prep Cost</div>
-            <div id="ps-inbound" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="Pick & pack, transport, prep cost per unit…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-inbound" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="Pick & pack, transport, prep cost per unit…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div id="opexExtra"></div>
@@ -2095,38 +2413,50 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
         <div class="m-rows" id="mktgRows">
           <div class="m-row-3 m-hdr">
             <div class="m-name">Expense Metric</div>
-            <div>Platform</div>
+            <div>Applicable Platforms</div>
             <div>Notes</div>
             <div></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Amazon Sponsored Ads (SP/SB/SD)</div>
-            <div id="ps-amz-ads" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="SP, SB, SD — via Amazon Ads API…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-amz-ads" data-ap-rule="amazon-only"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="SP, SB, SD — via Amazon Ads API…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
-            <div class="m-name">TikTok Ads</div>
-            <div id="ps-tiktok-ads" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="Via TikTok Ads API…"></div>
+            <div class="m-name">
+              TikTok Ads
+              <div style="font-size:10px;font-weight:500;color:var(--text-muted);margin-top:2px">Normal Campaigns</div>
+            </div>
+            <div class="ap-cell"><span class="ap-display" id="ps-tiktok-normal" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="Standard awareness / performance campaigns…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
+            <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
+          </div>
+          <div class="m-row-3">
+            <div class="m-name">
+              TikTok Ads
+              <div style="font-size:10px;font-weight:500;color:var(--text-muted);margin-top:2px">GMV Campaigns · TikTok only</div>
+            </div>
+            <div class="ap-cell"><span class="ap-display" id="ps-tiktok-gmv" data-ap-rule="tiktok-only"><span class="plat-tag" style="font-size:11px">TikTok</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="GMV-optimised campaigns (TikTok only)…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Meta / Google / Other Paid</div>
-            <div id="ps-meta-ads" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" type="text" placeholder="Multi-channel paid media spend…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-meta-ads" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="Multi-channel paid media spend…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Influencer Cost</div>
-            <div id="ps-influencer" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" id="m_influencer_val" type="text" placeholder="Creator / influencer campaign spend…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-influencer" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" id="m_influencer_val" type="text" placeholder="Creator / influencer campaign spend…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div class="m-row-3">
             <div class="m-name">Agency / Retainer</div>
-            <div id="ps-agency" class="plat-select-wrap"><!-- PlatSelect --></div>
-            <div><input class="cell-input" id="m_agency_val" type="text" placeholder="Agency management fees…"></div>
+            <div class="ap-cell"><span class="ap-display" id="ps-agency" data-ap-rule="all-channels"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+            <div><div class="notes-wrap"><input class="cell-input" id="m_agency_val" type="text" placeholder="Agency management fees…"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
             <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>
           </div>
           <div id="mktgExtra"></div>
@@ -2168,50 +2498,46 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
 
   <div class="step-nav">
     <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-    <button class="btn-fwd" onclick="nextStep()">KPI Dictionary &amp; SLA <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    <button class="btn-fwd" onclick="nextStep()">Risks &amp; Assumptions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
   </div>
 </div><!-- /step-1 -->
 
-  <!-- ══════════════════════════════════════════════════
-       PAGE 3 — KPI DICTIONARY & SLA
-  ══════════════════════════════════════════════════ -->
+
+<!-- ══════════════════════════════════════════════════
+     PAGE 3 — RISKS & ASSUMPTIONS
+══════════════════════════════════════════════════ -->
 <div class="step-panel" id="step-2">
   <div class="card">
     <div class="card-hdr" onclick="toggleCard(this)">
-      <div class="card-hdr-l"><div class="card-ico">📖</div><div class="card-ttl">KPI Dictionary &amp; SLA</div></div>
+      <div class="card-hdr-l"><div class="card-ico">📝</div><div class="card-ttl">Assumptions</div></div>
       <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
     </div>
     <div class="card-body">
-      <div class="kpi-callout-pad">
-        <div class="callout" style="margin-bottom:16px">
-          <span class="callout-ico">✨</span>
-          <span>KPIs are auto-populated from your Revenue and Cost selections. All cells are editable. Use <strong>+ Add KPI Row</strong> to add metrics manually.</span>
-        </div>
-      </div>
-      <div class="kpi-scroll-wrap">
-        <table class="kpi-tbl">
-          <thead>
-            <tr>
-              <th class="kpi-name-cell">KPI</th>
-              <th class="kpi-def-cell">Definition</th>
-              <th class="kpi-src-cell">Source</th>
-              <th class="kpi-grain-cell">Grain</th>
-              <th class="kpi-sot-cell">Source of Truth<br>— Amazon</th>
-              <th class="kpi-sot-cell">Source of Truth<br>— TikTok</th>
-              <th class="kpi-sot-cell">Source of Truth<br>— Shopify</th>
-              <th class="kpi-sla-cell">SLA</th>
-              <th class="kpi-del-cell"></th>
-            </tr>
-          </thead>
-          <tbody id="kpiBody"></tbody>
-        </table>
-      </div>
-      <div class="kpi-btn-pad">
-        <button class="btn-add" onclick="addKpiRow()">+ Add KPI Row</button>
-      </div>
+      <table class="assump-tbl" id="assumptionsTable">
+        <thead><tr><th style="width:180px">Category</th><th>Comments</th><th style="width:40px"></th></tr></thead>
+        <tbody id="assumptionsList">
+          <tr><td><input class="ci" type="text" value="Data Access"></td><td><textarea class="ci">Complete and uninterrupted access to all confirmed platforms will be provisioned prior to development.</textarea></td><td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td></tr>
+          <tr><td><input class="ci" type="text" value="Source Data Integrity"></td><td><textarea class="ci">Data sources will be maintained by the client team with consistent mappings and no discrepancies.</textarea></td><td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td></tr>
+        </tbody>
+      </table>
+      <button class="btn-add" onclick="addAssumption()" style="margin-top:8px">+ Add Assumption</button>
     </div>
   </div>
-
+  <div class="card">
+    <div class="card-hdr" onclick="toggleCard(this)">
+      <div class="card-hdr-l"><div class="card-ico">⚠️</div><div class="card-ttl">Risks &amp; Open Items</div></div>
+      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="card-body">
+      <table class="risk-tbl">
+        <thead><tr><th style="width:180px">Category</th><th>Comments</th><th style="width:120px">Severity</th><th style="width:40px"></th></tr></thead>
+        <tbody id="riskList">
+          <tr><td><input class="ci" type="text" placeholder="Risk category…"></td><td><input class="ci" type="text" placeholder="Describe risk…"></td><td><select class="risk-sev"><option>Low</option><option selected>Medium</option><option>High</option></select></td><td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td></tr>
+        </tbody>
+      </table>
+      <button class="btn-add" onclick="addRisk()" style="margin-top:8px">+ Add Risk / Open Item</button>
+    </div>
+  </div>
   <div class="step-nav">
     <button class="btn-back" onclick="prevStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
     <button class="btn-fwd" onclick="nextStep()">Scope Lock <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -2232,53 +2558,7 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
     <div class="card-body"><div id="validationOutput" style="margin-top:6px"></div></div>
   </div>
 
-  <!-- Assumptions -->
-  <div class="card">
-    <div class="card-hdr" onclick="toggleCard(this)">
-      <div class="card-hdr-l"><div class="card-ico">📝</div><div class="card-ttl">Assumptions</div></div>
-      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-    </div>
-    <div class="card-body">
-      <table class="assump-tbl" id="assumptionsTable">
-        <thead><tr><th style="width:180px">Category</th><th>Comments</th><th style="width:40px"></th></tr></thead>
-        <tbody id="assumptionsList">
-          <tr>
-            <td><input class="ci" type="text" value="Data Access" placeholder="Category…"></td>
-            <td><textarea class="ci" placeholder="Comments…">Complete and uninterrupted access to all confirmed platforms will be provisioned prior to development to enable end-to-end data validation and QA.</textarea></td>
-            <td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>
-          </tr>
-          <tr>
-            <td><input class="ci" type="text" value="Source Data Integrity" placeholder="Category…"></td>
-            <td><textarea class="ci" placeholder="Comments…">Data sources will be maintained by the client team with consistent mappings, complete records, and no discrepancies.</textarea></td>
-            <td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <button class="btn-add" onclick="addAssumption()" style="margin-top:8px">+ Add Assumption</button>
-    </div>
-  </div>
 
-  <!-- Risks -->
-  <div class="card">
-    <div class="card-hdr" onclick="toggleCard(this)">
-      <div class="card-hdr-l"><div class="card-ico">⚠️</div><div class="card-ttl">Risks &amp; Open Items</div></div>
-      <div class="card-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-    </div>
-    <div class="card-body">
-      <table class="risk-tbl">
-        <thead><tr><th style="width:180px">Category</th><th>Comments</th><th style="width:120px">Severity</th><th style="width:40px"></th></tr></thead>
-        <tbody id="riskList">
-          <tr>
-            <td><input class="ci" type="text" placeholder="Risk category…"></td>
-            <td><input class="ci" type="text" placeholder="Describe risk or open item…"></td>
-            <td><select class="risk-sev"><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option></select></td>
-            <td class="risk-del"><button class="btn-del" onclick="this.closest('tr').remove()">×</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <button class="btn-add" onclick="addRisk()" style="margin-top:8px">+ Add Risk / Open Item</button>
-    </div>
-  </div>
 
   <!-- Success Criteria -->
   <div class="card">
@@ -2323,7 +2603,8 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
         <h3>🔒 Scope Lock</h3>
         <p>Lock the scope to freeze all configurations and enable BRD export. Once locked, any change requests require a formal scope change process. If no approval or change request is received within 2 business days of BRD delivery, it is assumed signed off.</p>
       </div>
-      <div class="scope-lock-toggle" id="scopeToggle" onclick="toggleScopeLock()">
+      <div id="lockHint" class="lock-hint" style="display:none">⚠️ Complete all required fields above to enable scope lock.</div>
+    <div class="scope-lock-toggle" id="scopeToggle" onclick="toggleScopeLock()">
         <span class="scope-lock-toggle-ico" id="scopeIco">🔓</span>
         <span class="scope-lock-toggle-txt" id="scopeTxt">Lock Scope</span>
       </div>
@@ -2337,12 +2618,18 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
   <div class="brd-preview" id="brdPreview" style="display:none"></div>
 
   <div class="export-section" id="exportSection">
-    <button class="btn-export locked" id="scopeExportBtn" onclick="openExportModal()" disabled>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      <span id="scopeExportLabel">Download BRD (.docx)</span>
-    </button>
+    <div class="download-btns">
+      <button class="btn-export locked" id="scopeExportBtn" onclick="openExportModal()" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download BRD (.docx)
+      </button>
+      <button class="btn-export locked" id="scopeKpiBtn" onclick="openKpiExportModal()" disabled style="background:var(--green-dark)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download KPI Dictionary (.xlsx)
+      </button>
+    </div>
     <div class="export-locked-msg" id="exportLockedMsg">
-      🔒 <strong>Lock the scope above</strong> to enable BRD export.
+      🔒 <strong>Lock the scope above</strong> to enable exports.
     </div>
   </div>
 
@@ -2398,6 +2685,15 @@ textarea.kci { resize:none; min-height:auto; overflow:hidden; }
     </div>
   </div>
 </div>
+<!-- NOTE PREVIEW MODAL -->
+<div class="note-modal-wrap" id="noteModal" onclick="if(event.target===this)closeNoteModal()">
+  <div class="note-modal-box">
+    <button class="note-modal-close" onclick="closeNoteModal()">×</button>
+    <div class="note-modal-lbl">Note</div>
+    <div class="note-modal-content" id="noteModalContent"></div>
+  </div>
+</div>
+
 <!-- RESET MODAL -->
 <div class="modal-wrap" id="resetModal">
   <div class="modal">
@@ -2480,10 +2776,9 @@ function showPkgSelector() {
 function initEssential() {
   document.getElementById('brdDate').value = new Date().toISOString().split('T')[0];
   updateShopifyStores();
-  initAllPlatSelectors();
-  buildKpiTable();
+  goStep(0);
+  updateAllApplicablePlatforms();
   syncProgress();
-  runValidation('validationOutput');
 }
 
 // ═══════════════════════════════════════════════
@@ -2682,20 +2977,209 @@ function getPlatValue(id) {
 function togglePlatDropdown(id) { /* deprecated — handled by addEventListener above */ }
 
 function initAllPlatSelectors() {
-  const ids = [
-    'ps-gross-sales','ps-shipping','ps-giftwrap',
-    'ps-refunds','ps-promo',
-    'ps-referral','ps-payment','ps-fulfill-plat','ps-fulfill-sell','ps-storage','ps-inbound',
-    'ps-amz-ads','ps-tiktok-ads','ps-meta-ads','ps-influencer','ps-agency',
-  ];
-  ids.forEach(id => initPlatSelector(id, true));
+  // ap-display used instead of dropdown selectors
+  updateAllApplicablePlatforms();
 }
 
 function stopProp(e) { /* just prevents card collapse */ }
 
 // ═══════════════════════════════════════════════
-// THEME
+// CHANNEL + AD PLATFORM CHECKBOX TOGGLE
 // ═══════════════════════════════════════════════
+function toggleChannelCheck(ch) {
+  const chk    = document.getElementById('chk-' + ch);
+  const detail = document.getElementById('ch-' + ch + '-detail');
+  if (!detail) return;
+  detail.classList.toggle('open', chk.checked);
+  // Immediately update all Applicable Platform tags on page 2
+  updateAllApplicablePlatforms();
+  syncProgress();
+}
+
+// Build the set of active sales channels and ad platforms from checkboxes
+function getActiveSelections() {
+  const channels = [];
+  if (document.getElementById('chk-amazon')?.checked)  channels.push('Amazon');
+  if (document.getElementById('chk-shopify')?.checked) channels.push('Shopify');
+  if (document.getElementById('chk-tiktok')?.checked)  channels.push('TikTok');
+  const adPlats = [];
+  ['amzads','tiktokads','googleads','metaads','msads','snapads','pintads','applovin'].forEach(id => {
+    const map = {amzads:'Amazon Ads',tiktokads:'TikTok Ads',googleads:'Google Ads',
+                 metaads:'Meta Ads',msads:'Microsoft Ads',snapads:'Snapchat',
+                 pintads:'Pinterest',applovin:'Applovin'};
+    if (document.getElementById('chk-'+id)?.checked) adPlats.push(map[id]);
+  });
+  return { channels, adPlats, all: [...channels, ...adPlats] };
+}
+
+// Update every .ap-display span based on its data-ap-rule attribute
+// Platforms are shown as toggleable tags - click to deselect
+function updateAllApplicablePlatforms() {
+  const sel = getActiveSelections();
+  document.querySelectorAll('.ap-display').forEach(el => {
+    const rule = el.dataset.apRule || 'all-channels';
+    // Get currently deselected platforms for this element
+    const deselected = el.dataset.deselected ? el.dataset.deselected.split(',') : [];
+    
+    let basePlats = [];
+    switch(rule) {
+      case 'all-channels':    basePlats = sel.channels; break;
+      case 'amazon-only':     basePlats = sel.channels.includes('Amazon') ? ['Amazon'] : []; break;
+      case 'shopify-stripe':  basePlats = ['Shopify','Stripe'].filter(p => p==='Stripe' || sel.channels.includes(p)); break;
+      case 'amazon-tiktok':   basePlats = sel.channels.filter(p => p==='Amazon'||p==='TikTok'); break;
+      case 'tiktok-only':     basePlats = ['TikTok']; break;
+      case 'dynamic':         basePlats = sel.channels; break;
+      default:                basePlats = sel.channels; break;
+    }
+    if (!basePlats.length) basePlats = ['—'];
+    
+    const elId = el.id;
+    el.innerHTML = basePlats.map(p => {
+      const isDesel = deselected.includes(p);
+      return `<span class="plat-tag${isDesel ? ' plat-tag-desel' : ''}" 
+        onclick="toggleApPlatTag(event,'${elId}','${p}')" 
+        title="${isDesel ? 'Click to re-add' : 'Click to remove'}"
+        style="font-size:11px;cursor:pointer">${p}${isDesel ? ' ✕' : ''}</span>`;
+    }).join('');
+  });
+}
+
+// Toggle a single platform tag on/off in an ap-display
+function toggleApPlatTag(e, elId, plat) {
+  e.stopPropagation();
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const deselected = el.dataset.deselected ? el.dataset.deselected.split(',').filter(Boolean) : [];
+  const idx = deselected.indexOf(plat);
+  if (idx >= 0) deselected.splice(idx, 1);  // re-enable
+  else          deselected.push(plat);        // disable
+  el.dataset.deselected = deselected.join(',');
+  updateAllApplicablePlatforms();
+}
+
+function toggleAdPlatCheck(ch) {
+  const chk    = document.getElementById('chk-' + ch);
+  const detail = document.getElementById('ch-' + ch + '-detail');
+  if (!detail) return;
+  detail.classList.toggle('open', chk.checked);
+}
+
+// ═══════════════════════════════════════════════
+// GET ACTIVE PLATFORMS (from checkbox state)
+// ═══════════════════════════════════════════════
+function getActivePlatforms() {
+  const plats = [];
+  if (document.getElementById('chk-amazon')?.checked)  plats.push('Amazon');
+  if (document.getElementById('chk-shopify')?.checked) plats.push('Shopify');
+  if (document.getElementById('chk-tiktok')?.checked)  plats.push('TikTok');
+  return plats;
+}
+
+// Refresh all platform selectors to show only active platforms
+function refreshPlatSelectors() {
+  const active = getActivePlatforms();
+  // Update global PLATFORMS array used by selectors
+  // Re-init all selectors with current active platforms
+  Object.keys(platSelectors).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const fixedPlat = el.dataset.fixedPlat;
+    if (fixedPlat) {
+      // Fixed platform — keep as-is but filter to only active ones
+      const fixed = fixedPlat.split(',').filter(p => active.includes(p) || !['Amazon','Shopify','TikTok'].includes(p));
+      el.dataset.resolvedPlat = fixed.join(', ') || fixedPlat;
+    }
+    // Re-render display only (state unchanged)
+    renderPlatDisplay(id);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// HISTORIC DATA TAGS
+// ═══════════════════════════════════════════════
+function selectHistTag(el, groupId) {
+  document.querySelectorAll(`#${groupId} .hist-tag`).forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getHistVal(groupId) {
+  const active = document.querySelector(`#${groupId} .hist-tag.active`);
+  return active ? active.textContent.trim() : '—';
+}
+
+// ═══════════════════════════════════════════════
+// NOTE PREVIEW MODAL (Eye icon)
+// ═══════════════════════════════════════════════
+function openNoteModal(eyeBtn) {
+  const input = eyeBtn.previousElementSibling;
+  const val   = input?.value?.trim() || '(No note entered)';
+  const wrap  = document.getElementById('noteModal');
+  const content = document.getElementById('noteModalContent');
+  if (wrap && content) {
+    content.textContent = val;
+    wrap.classList.add('open');
+  }
+}
+function closeNoteModal() {
+  document.getElementById('noteModal')?.classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════
+// KPI EXPORT MODAL (separate from BRD)
+// ═══════════════════════════════════════════════
+function openKpiExportModal() {
+  if (!scopeLocked) return;
+  doExportExcel();
+}
+
+// ═══════════════════════════════════════════════
+// Navigate to field from validation
+// ═══════════════════════════════════════════════
+function navToField(step, fieldId) {
+  goStep(step);
+  setTimeout(() => {
+    const el = document.getElementById(fieldId);
+    if (!el) return;
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    if (el.focus) el.focus();
+    el.classList.add('highlight-field');
+    setTimeout(() => el.classList.remove('highlight-field'), 2500);
+  }, 320);
+}
+
+// ═══════════════════════════════════════════════
+// Override toggleScopeLock to also enable KPI btn
+// ═══════════════════════════════════════════════
+const _origToggleScopeLock = toggleScopeLock;
+// Patch export unlock to include KPI xlsx btn
+function toggleScopeLock() {
+  scopeLocked = !scopeLocked;
+  const toggle  = document.getElementById('scopeToggle');
+  const ico     = document.getElementById('scopeIco');
+  const txt     = document.getElementById('scopeTxt');
+  const dot     = document.getElementById('scopeDot');
+  const statusT = document.getElementById('scopeStatusTxt');
+  const preview = document.getElementById('brdPreview');
+  const expBtn  = document.getElementById('scopeExportBtn');
+  const kpiBtn  = document.getElementById('scopeKpiBtn');
+  const expMsg  = document.getElementById('exportLockedMsg');
+  const hdrBtn  = document.getElementById('exportBtn');
+  if (scopeLocked) {
+    toggle.classList.add('locked'); ico.textContent = '🔒'; txt.textContent = 'Locked — Click to Unlock';
+    dot.classList.add('live');
+    statusT.textContent = 'Scope locked. Exports are now enabled.';
+    [expBtn, kpiBtn, hdrBtn].forEach(b => { if(b){ b.classList.remove('locked'); b.disabled = false; }});
+    expMsg.innerHTML = '✅ <strong>Scope is locked.</strong> Download your documents below.';
+    preview.style.display = 'block'; buildPreview();
+  } else {
+    toggle.classList.remove('locked'); ico.textContent = '🔓'; txt.textContent = 'Lock Scope';
+    dot.classList.remove('live');
+    statusT.textContent = 'Scope is open — complete all sections and lock to enable export.';
+    [expBtn, kpiBtn, hdrBtn].forEach(b => { if(b){ b.classList.add('locked'); b.disabled = true; }});
+    expMsg.innerHTML = '🔒 <strong>Lock the scope above</strong> to enable exports.';
+    preview.style.display = 'none';
+  }
+}
 function toggleTheme() {
   isDark = !isDark;
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
@@ -2719,9 +3203,9 @@ function goStep(n) {
   document.getElementById('step-' + n).classList.add('active');
   document.querySelector(`.step-pill[data-step="${n}"]`).classList.add('active');
   curStep = n;
-  if (n === 2) { buildKpiTable(); document.body.classList.add('kpi-active'); }
-  else         { document.body.classList.remove('kpi-active'); }
-  if (n === 3) { runValidation('validationOutput'); buildPreview(); }
+  if (n === 1) { updateAllApplicablePlatforms(); }
+  if (n === 3) { buildKpiTable(); setTimeout(() => { runValidation('validationOutput'); buildPreview(); }, 50); }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -2813,8 +3297,8 @@ function makePlatRow3(metricName, psId, notePlaceholder, extraId) {
   d.className = 'm-row-3';
   d.innerHTML = `
     <div class="m-name"><input class="cell-input" type="text" value="${metricName}" placeholder="Metric name…" style="font-weight:600"></div>
-    <div id="${psId}" class="plat-select-wrap"><!-- PlatSelect --></div>
-    <div><input class="cell-input" type="text" placeholder="${notePlaceholder}"></div>
+    <div class="ap-cell"><span class="ap-display" id="${psId}" data-ap-rule="dynamic"><span class="plat-tag" style="font-size:11px">All Channels</span></span></div>
+    <div><div class="notes-wrap"><input class="cell-input" type="text" placeholder="${notePlaceholder}"><button class="eye-btn" onclick="openNoteModal(this)" title="View note">👁</button></div></div>
     <div class="m-del"><button class="btn-del" title="Remove" onclick="removeMetricRow(this)">×</button></div>`;
   return d;
 }
@@ -3038,26 +3522,59 @@ function syncProgress() {
 // VALIDATION (no CM Target checks)
 // ═══════════════════════════════════════════════
 function runValidation(targetId) {
+  // step → anchor for navigation
   const checks = [
-    { ok: !!g('clientName'),    label:'Client Name',      sub:'Required — Objective & Engagement' },
-    { ok: !!g('projectTitle'),  label:'Project Title',    sub:'Required — Objective & Engagement' },
-    { ok: !!g('bizProblem'),    label:'Business Problem', sub:'Required — Objective & Engagement' },
-    { ok: !!g('projObjective'), label:'Project Objective',sub:'Required — Objective & Engagement' },
-    { ok: !!g('reportingCurrency'), label:'Reporting Currency', sub:'Required — Accounting Orientation', warn: true },
-    { ok: !!g('cogsNotes') || true, label:'COGS Configuration', sub:'Recommended — COGS section', warn: true },
+    { ok: !!g('clientName'),    label:'Client Name',       sub:'Required — Objective & Engagement',    step:0, anchor:'clientName' },
+    { ok: !!g('projectTitle'),  label:'Project Title',     sub:'Required — Objective & Engagement',    step:0, anchor:'projectTitle' },
+    { ok: !!g('bizProblem'),    label:'Business Problem',  sub:'Required — Objective & Engagement',    step:0, anchor:'bizProblem' },
+    { ok: !!g('projObjective'), label:'Project Objective', sub:'Required — Objective & Engagement',    step:0, anchor:'projObjective' },
+    { ok: !!g('reportingCurrency'), label:'Reporting Currency', sub:'Set in Accounting Orientation',   step:0, anchor:'reportingCurrency', warn:true },
+    { ok: (document.getElementById('chk-amazon')?.checked || document.getElementById('chk-shopify')?.checked || document.getElementById('chk-tiktok')?.checked),
+      label:'Sales Channel Selection', sub:'Select at least one Sales Channel', step:0, anchor:'chk-amazon' },
+    { ok: document.querySelectorAll('#assumptionsList tr').length > 0,
+      label:'Assumptions', sub:'Add at least one assumption', step:2, anchor:'assumptionsList', warn:true },
   ];
+
   const errors = checks.filter(c => !c.ok && !c.warn).length;
   const warns  = checks.filter(c => !c.ok &&  c.warn).length;
   const total  = errors + warns;
   const badge  = document.getElementById('valBadge');
   if (badge) { badge.style.display = total > 0 ? 'flex' : 'none'; badge.textContent = total; }
+
+  // Enable/disable scope lock based on hard errors only
+  const allHardOk = errors === 0;
+  const scopeToggleEl = document.getElementById('scopeToggle');
+  if (scopeToggleEl && !scopeLocked) {
+    scopeToggleEl.style.opacity = allHardOk ? '1' : '0.45';
+    scopeToggleEl.style.pointerEvents = allHardOk ? '' : 'none';
+    const lockHint = document.getElementById('lockHint');
+    if (lockHint) lockHint.style.display = allHardOk ? 'none' : 'block';
+  }
+
   const el = document.getElementById(targetId);
   if (!el) return;
   el.innerHTML = checks.map(c => {
     const cls  = c.ok ? 'v-ok' : c.warn ? 'v-warn' : 'v-err';
     const icon = c.ok ? '✅' : c.warn ? '⚠️' : '❌';
-    return `<div class="v-item ${cls}"><div class="v-ico">${icon}</div><div class="v-msg"><strong>${c.label}</strong><div class="v-sub">${c.ok ? 'Looks good' : c.sub}</div></div></div>`;
+    const navBtn = !c.ok
+      ? `<button class="v-nav-btn" onclick="navToField(${c.step},'${c.anchor}')" title="Go to this field">→ Fix</button>`
+      : '';
+    return `<div class="v-item ${cls}"><div class="v-ico">${icon}</div><div class="v-msg"><strong>${c.label}</strong><div class="v-sub">${c.ok ? 'Looks good' : c.sub}</div></div>${navBtn}</div>`;
   }).join('');
+}
+
+// Navigate to a specific step and field
+function navToField(step, fieldId) {
+  goStep(step);
+  setTimeout(() => {
+    const el = document.getElementById(fieldId);
+    if (el) {
+      el.scrollIntoView({ behavior:'smooth', block:'center' });
+      el.focus?.();
+      el.classList.add('highlight-field');
+      setTimeout(() => el.classList.remove('highlight-field'), 2000);
+    }
+  }, 300);
 }
 
 // ═══════════════════════════════════════════════
@@ -3354,20 +3871,31 @@ function collectBRDData() {
     if (note) cmCustom.push({ label, note });
   });
 
-  // Active channels — only those whose rows still exist (× removes them)
+  // Active channels — only those whose checkboxes are checked
   const activeChannels = [];
-  if (document.querySelector('#ch-amazon-row'))  activeChannels.push('Amazon');
-  if (document.querySelector('#ch-shopify-row')) activeChannels.push('Shopify DTC');
-  if (document.querySelector('#ch-tiktok-row'))  activeChannels.push('TikTok Shop');
+  if (document.getElementById('chk-amazon')?.checked)  activeChannels.push('Amazon');
+  if (document.getElementById('chk-shopify')?.checked) activeChannels.push('Shopify DTC');
+  if (document.getElementById('chk-tiktok')?.checked)  activeChannels.push('TikTok Shop');
 
-  // Active ad platforms — only those whose rows still exist
+  // Historic data support — from hist-tag selections
+  const historicData = {
+    amazon:    getHistVal('hist-amazon'),
+    shopify:   getHistVal('hist-shopify'),
+    tiktok:    getHistVal('hist-tiktok'),
+    amzAds:    getHistVal('hist-amzads'),
+    tiktokAds: getHistVal('hist-tiktokads'),
+    googleAds: getHistVal('hist-googleads'),
+    metaAds:   getHistVal('hist-metaads'),
+  };
+
+  // Active ad platforms — only those whose checkboxes are checked
   const adPlatforms = [];
   const adPlatMap = {
     'amzads':'Amazon Ads (SP,SB,SD)','tiktokads':'TikTok Ads','googleads':'Google Ads',
     'metaads':'Meta Ads','msads':'Microsoft Ads','snapads':'Snapchat','pintads':'Pinterest','applovin':'Applovin'
   };
   Object.entries(adPlatMap).forEach(([id, name]) => {
-    if (document.querySelector(`#ch-${id}-row`)) adPlatforms.push(name);
+    if (document.getElementById('chk-' + id)?.checked) adPlatforms.push(name);
   });
 
   // Key decisions — fixed list in v6
@@ -3833,11 +4361,6 @@ async function doExport() {
       gap(80),
       body(d.projObjective),
       gap(100),
-      ...(d.primaryUsers.length > 0 ? [
-        subH('Primary Users'),
-        ...d.primaryUsers.map(u => bullet(u)),
-        gap(80),
-      ] : []),
       ...(d.keyDecisions.length > 0 ? [
         subH('Key Decisions CM Will Support'),
         ...d.keyDecisions.map(k => bullet(k)),
